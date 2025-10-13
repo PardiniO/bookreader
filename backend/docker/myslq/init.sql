@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS nationality (
 CREATE TABLE IF NOT EXISTS author (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_nationality INT,
-    name VARCHAR(150) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     biography TEXT,
 );
 
@@ -27,16 +27,19 @@ CREATE TABLE IF NOT EXISTS genre (
 
 CREATE TABLE IF NOT EXISTS language (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS book (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
+    id_language INT,
+    title VARCHAR(255) NOT NULL,
     synopsis TEXT,
     publication_date DATE,
     rating DECIMAL(3, 2),
-    id_language INT
+    cover_url VARCHAR(255),
+    external_id VARCHAR(100),
+    source ENUM('openlibrary', 'gutendex', 'manual') DEFAULT 'manual'
 );
 
 CREATE TABLE IF NOT EXISTS book_author (
@@ -51,28 +54,46 @@ CREATE TABLE IF NOT EXISTS book_gender (
 
 CREATE TABLE IF NOT EXISTS reading_status (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    status ENUM('reading', 'to_read', 'read')
+    status ENUM('reading', 'to_read', 'read') NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS library (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
-    id_libro INT NOT NULL,
+    id_book INT NOT NULL,
     id_reading_status INT NOT NULL,
     added_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS file (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT NOT NULL,
+    filename VARCHAR(255) NOT NULL,
+    mimetype VARCHAR(50),
+    path VARCHAR(255) NOT NULL,
+    size BIGINIT,
+    upload_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS book_file (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_book INT NOT NULL,
+    id_file INT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS reading_progress (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_library INT NOT NULL UNIQUE,
+    id_user INT NOT NULL,
+    id_file INT NOT NULL,
     current_page INT DEFAULT 0,
-    progress_percent DECIMAL(5, 2),
+    progress_percent DECIMAL(5, 2) DEFAULT 0,
     last_read DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS note (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    text INT NOT NULL,
+    id_progress INT NOT NULL,
+    text TEXT NOT NULL,
     page INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,6 +1,11 @@
+import { IReadingProgress } from "./readingProgressInterface";
+
 export interface INote {
     id?: number;
+    id_progress: number;
     text: string;
-    page: number;
+    page?: number;
     created_at: Date;
+
+    progress?: IReadingProgress;
 }

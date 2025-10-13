@@ -1,4 +1,4 @@
-export interface IAuthorNationality {
+export interface INationality {
     id: number;
     name: string;
 }

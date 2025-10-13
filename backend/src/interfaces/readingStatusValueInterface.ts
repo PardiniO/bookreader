@@ -1,6 +1,6 @@
-export type ReadingStatus = 'reading' | 'to_read' | 'read';
+export type ReadingStatusValue = 'reading' | 'to_read' | 'read';
 
-export interface IReadingStatusValue {
+export interface IReadingStatus {
     id?: number;
-    status: ReadingStatus;
+    status: ReadingStatusValue;
 }
