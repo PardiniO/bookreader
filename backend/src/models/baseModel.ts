@@ -1,18 +1,22 @@
 import { Database } from '../config/db';
-import { IPaginationParams, IPaginatedResponse } from '../interfaces/index';
+import { IPaginationParams, IPaginatedResponse, IApiResponse } from '../interfaces/index';
 
 export abstract class BaseModel {
     protected db: Database;
     protected tableName: string;
-
+    
     constructor(tableName: string) {
         this.db = Database.getInstance();
         this.tableName = tableName;
     }
+    
+    protected async create<T>(data: Partial<T>): Promise<number> {
+        return await this.db.insert<T>(this.tableName, data);
+    }
 
     protected async findAll<T>(
         conditions: string = '1=1',
-        values: number[] = [],
+        values: string[] = [],
         pagination?: IPaginationParams
     ): Promise<T[]> {
         let sql = `SELECT * FROM ${this.tableName} WHERE ${conditions}`;
@@ -31,14 +35,10 @@ export abstract class BaseModel {
 
     protected async findOne<T>(
         conditions: string,
-        values: any[] = []
+        values: string[] = []
     ): Promise<T | null> {
         const sql = `SELECT * FROM ${this.tableName} WHERE ${conditions} LIMIT 1`;
         return await this.db.queryOne<T>(sql, values);
-    }
-
-    protected async create<T>(data: Partial<T>): Promise<number> {
-        return await this.db.insert<T>(this.tableName, data);
     }
 
     protected async updateById<T>(
@@ -54,7 +54,7 @@ export abstract class BaseModel {
 
     protected async count(
         conditions: string = '1=1',
-        values: any[] = []
+        values: string[] = []
     ): Promise<number> {
         const sql = `SELECT COUNT(*) as total FROM ${this.tableName} WHERE ${conditions}`;
         const result = await this.db.queryOne<{ total: number }>(sql, values);
@@ -63,7 +63,7 @@ export abstract class BaseModel {
 
     protected async exists(
         conditions: string,
-        values: any[] = []
+        values: string[] = []
     ): Promise<boolean> {
         const count = await this.count(conditions, values);
         return count > 0;

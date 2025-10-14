@@ -3,5 +3,7 @@ export interface IUser {
     username: string;
     email: string;
     password: string;
-    registration_date?: Date;
+    created_at?: Date;
+    updated_at?: Date;
+    is_active?: boolean;
 }
