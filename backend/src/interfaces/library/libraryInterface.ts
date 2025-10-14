@@ -1,6 +1,6 @@
-import { IBook } from "./bookInterface";
-import { IReadingStatus } from "./readingStatusValueInterface";
-import { IUser } from "./userInterface";
+import { IBook } from "../book/bookInterface";
+import { IReadingStatus } from "../library/readingStatusValueInterface";
+import { IUser } from "../user/userInterface";
 
 export interface ILibary {
     id?: number;

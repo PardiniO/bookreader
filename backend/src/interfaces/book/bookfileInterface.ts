@@ -1,5 +1,5 @@
-import { IBook } from "./bookInterface";
-import { IFile } from "./fileInterface";
+import { IBook } from "../book/bookInterface";
+import { IFile } from "../file/fileInterface";
 
 export interface IBookFile {
     id?: number;

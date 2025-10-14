@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { IDatabaseConfig } from '../interfaces/databaseInterface';
+import { IDatabaseConfig } from '../interfaces/common/databaseInterface';
 
 export class Database {
     private static instance: Database;

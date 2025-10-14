@@ -1,6 +1,6 @@
-import { IBookFile } from "./bookfileInterface";
-import { IReadingProgress } from "./readingProgressInterface";
-import { IUser } from "./userInterface";
+import { IBookFile } from "../book/bookfileInterface";
+import { IReadingProgress } from "../library/readingProgressInterface";
+import { IUser } from "../user/userInterface";
 
 export interface IFile {
     id?: number;
