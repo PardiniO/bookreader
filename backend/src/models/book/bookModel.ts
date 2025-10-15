@@ -1,5 +1,5 @@
-import { IBook, IPaginationParams, IPaginatedResponse, IUser } from "../interfaces/index";
-import { BaseModel } from "./baseModel";
+import { IBook, IPaginationParams, IPaginatedResponse, IUser } from "../../interfaces/index";
+import { BaseModel } from "../baseModel";
 
 export class BookModel extends BaseModel {
     constructor() {
