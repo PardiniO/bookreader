@@ -15,6 +15,7 @@ export interface IBook {
     cover_url?: string;
     externalId?: string;
     source: BookSourse;
+    is_active?: boolean;
 
     language?: ILanguage;
     authors?: IAuthor[];
