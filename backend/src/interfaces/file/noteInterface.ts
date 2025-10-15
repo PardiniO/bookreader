@@ -1,4 +1,4 @@
-import { IReadingProgress } from "./readingProgressInterface";
+import { IReadingProgress } from "../library/readingProgressInterface";
 
 export interface INote {
     id?: number;

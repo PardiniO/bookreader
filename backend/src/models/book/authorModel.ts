@@ -13,7 +13,7 @@ export class AuthorModel extends BaseModel{
     public async getAllAuthors(pagination?: IPaginationParams): Promise<IAuthor[] | IPaginatedResponse<IAuthor>> {
         if (pagination) {
             const [authors, total] = await Promise.all([
-                this.findAll<IAuthor>('1+1', [], pagination),
+                this.findAll<IAuthor>('1=1', [], pagination),
                 this.count()
             ]);
 

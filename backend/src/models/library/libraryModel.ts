@@ -1,5 +1,5 @@
-import { ILibary, IPaginatedResponse, IPaginationParams } from "../interfaces/index";
-import { BaseModel } from "./baseModel";
+import { ILibary, IPaginatedResponse, IPaginationParams } from "../../interfaces/index";
+import { BaseModel } from "../baseModel";
 
 export class LibraryModel extends BaseModel {
     constructor() {
