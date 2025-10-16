@@ -1,5 +1,5 @@
 import { IBook } from "../book/bookInterface";
-import { IReadingStatus } from "../library/readingStatusValueInterface";
+import { IReadingStatus } from "./readingStatusInterface";
 import { IUser } from "../user/userInterface";
 
 export interface ILibary {

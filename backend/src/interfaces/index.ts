@@ -15,5 +15,5 @@ export * from './file/noteInterface';
 export * from './common/paginatedResponseInterface';
 export * from './common/paginationParamsInterface';
 export * from './library/readingProgressInterface';
-export * from './library/readingStatusValueInterface';
+export * from './library/readingStatusInterface';
 export * from './user/userInterface';
