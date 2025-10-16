@@ -15,7 +15,7 @@ export class LibraryModel extends BaseModel {
     }
 
     public async getLibraryByUserId(userId: number, pagination?: IPaginationParams): Promise<ILibary[] | IPaginatedResponse<ILibary>> {
-        const conditions = `user_id = ?`;
+        const conditions = `id_user = ?`;
         const values = [userId.toString()];
 
         if (pagination) {
