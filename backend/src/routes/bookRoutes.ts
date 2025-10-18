@@ -102,7 +102,6 @@ export class BookRouter {
         this.router.post('/:id/files', this.bookController.addFiles);
         this.router.delete('/:id/files/:fileId', this.bookController.removeFile);
     }
-    }
 
     public getRouter(): void {
         return this.router;

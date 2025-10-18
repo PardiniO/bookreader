@@ -1,15 +1,18 @@
 import { Router } from "express";
 import { UserRouter } from "./userRoutes";
-import { describe } from "node:test";
+import { BookRouter } from "./bookRoutes";
 
 export class ApiRoutes {
     public router: Router;
     private userRouter: UserRouter;
+    private bookRouter: BookRouter;
 
 
     constructor() {
         this.router = Router();
         this.userRouter = new UserRouter();
+        this.bookRouter = new BookRouter();
+
 
         this.initializeRoutes();
     }
@@ -50,6 +53,8 @@ export class ApiRoutes {
 
         //registrar rutas de módulos
         this.router.use('/users', this.userRouter.geRouter());
+        this.router.use('/books', this.bookRouter.getRouter());
+        
 
     }
 
