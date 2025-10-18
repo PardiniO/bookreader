@@ -3,8 +3,8 @@ import { IFile } from "../file/fileInterface";
 
 export interface IBookFile {
     id?: number;
-    id_book: number;
-    id_file: number;
+    idBook: number;
+    idFile: number;
 
     book?: IBook;
     file?: IFile;

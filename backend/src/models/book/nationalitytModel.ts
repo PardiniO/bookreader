@@ -1,7 +1,7 @@
 import { INationality, IPaginatedResponse, IPaginationParams } from "@/interfaces";
 import { BaseModel } from "../baseModel";
 
-export class NarionalityModel extends BaseModel {
+export class NationalityModel extends BaseModel {
     constructor() {
         super('nationalities');
     }

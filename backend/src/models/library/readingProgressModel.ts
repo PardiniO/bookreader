@@ -7,7 +7,7 @@ export class ReadingProgressModel extends BaseModel {
     }
 
     public async createStatus(progressData: Omit<IReadingProgress, 'id'>): Promise<number> {
-            return await this.create(progressData);
+        return await this.create(progressData);
     }
 
     public async getProgressByUserAndFile(userId: number, fileId: number): Promise<IReadingProgress | null> {

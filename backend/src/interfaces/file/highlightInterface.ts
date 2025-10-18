@@ -1,9 +1,9 @@
-import { IReadingProgress } from "./readingProgressInterface";
+import { IReadingProgress } from "../library/readingProgressInterface";
 
 export interface IHighlight {
     id?: number;
-    id_progress: number;
-    highlighted_text: string;
+    idProgress: number;
+    highlightedText: string;
     page?: number;
     color?: string;
 

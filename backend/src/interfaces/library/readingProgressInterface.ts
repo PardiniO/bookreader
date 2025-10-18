@@ -1,15 +1,15 @@
-import { IFile } from "./fileInterface";
-import { IHighlight } from "./highlightInterface";
-import { INote } from "./noteInterface";
-import { IUser } from "./userInterface";
+import { IFile } from "../file/fileInterface";
+import { IHighlight } from "../file/highlightInterface";
+import { INote } from "../file/noteInterface";
+import { IUser } from "../user/userInterface";
 
 export interface IReadingProgress {
     id?: number;
-    id_user: number;
-    id_file: number;
-    current_page: number;
-    progress_percent: number;
-    last_read: Date;
+    idUser: number;
+    idFile: number;
+    currentPage: number;
+    progressPercent: number;
+    lastRead: Date;
 
     user?: IUser;
     file?: IFile;

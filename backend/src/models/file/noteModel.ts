@@ -54,8 +54,8 @@ export class NoteModel extends BaseModel {
     }
 
     public async searchNote(searchTerm: string, pagination?: IPaginationParams): Promise<INote[] | IPaginatedResponse<INote>> {
-        const conditions = `(text LIKE ? OR page LIKE = ?)`;
-        const values = [`%${searchTerm}%`, `%${searchTerm}%`];
+        const conditions = `(text LIKE ?)`;
+        const values = [`%${searchTerm}%`];
 
         if (pagination) {
             const [notes, total] = await Promise.all([

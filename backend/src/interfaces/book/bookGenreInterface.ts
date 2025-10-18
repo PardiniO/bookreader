@@ -1,4 +1,4 @@
 export interface IBookGenre {
-    id_book: number;
-    id_genre: number;
+    idBook: number;
+    idGenre: number;
 }

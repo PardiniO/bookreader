@@ -6,27 +6,33 @@ export class UserModel extends BaseModel{
     constructor() {
         super('users');
     }
+    
+    private sanitizeUser(user: IUser): IUser | null {
+        if (!user) return null;
+        const { password, ...rest } = user;
+        return rest as IUser;
+    }
 
     public async getAllUsers(pagination?: IPaginationParams): Promise<IUser[] | IPaginatedResponse<IUser> | undefined> {
         if (pagination) {
             const [users, total] = await Promise.all([
-                this.findAll<IUser>('is_active = 1', [], pagination),
-                this.count('is_active = 1')
+                this.findAll<IUser>('1=1', [], pagination),
+                this.count()
             ]);
 
-            return this.buildPaginatedResponse(users, pagination, total);
+            const sanitized = users.map(user => this.sanitizeUser(user));
+            return this.buildPaginatedResponse(sanitized as IUser[], pagination, total);
         }
 
-        return await this.findAll<IUser>('is_active = 1');
+        const users = await this.findAll<IUser>();
+        return users.map(user => this.sanitizeUser(user) as IUser);
     }
 
     public async getUserById(id: number): Promise<IUser | null> {
         const user = await this.findById<IUser>(id);
-        if (user) {
-            const { password, ...userWihoutPassword } = user;
-            return userWihoutPassword as IUser;
-        }
-        return null;
+        if (!user) return null;
+
+        return this.sanitizeUser(user) as IUser;
     }
 
     public async getUserByEmail(email:string): Promise<IUser | null> {
@@ -35,18 +41,22 @@ export class UserModel extends BaseModel{
 
     public async createUser(userData: Omit<IUser, 'id' | 'created_at' | 'updated_at'>): Promise<number> {
         if (!userData.email || !userData.password || !userData.username) {
-            throw new Error("Faltan datos");
+            throw new Error("Faltan datos obligatorios: username, email o password");
         }
-        const existingUser = await this.getUserByEmail(userData.email);
-        if (existingUser) {
-            throw new Error("El email ya está registrado");
-        }
+
+        const existingByEmail = await this.getUserByEmail(userData.email);
+        if (existingByEmail) throw new Error("El email ya está registrado");
+        
+        const existingByUsername = await this.findOne<IUser>('username = ?', [userData.username]);
+        if (existingByUsername) throw new Error("El username ya está en uso");
+        
         const hashedPassword = await this.hashPassword(userData.password);
         const userToCreate = {
             ...userData,
             password: hashedPassword,
             is_active: true
-        };
+        } as IUser;
+
         return await this.create<IUser>(userToCreate);
     }
 
@@ -62,12 +72,25 @@ export class UserModel extends BaseModel{
             }
         }
 
-        const affectedRows = await this.updateById<IUser>(id, userData);
+        if (userData.username) {
+            const existingByUsername = await this.findOne<IUser>('username = ?', [userData.username]);
+            if (existingByUsername && existingByUsername.id !== id) {
+                throw new Error("El username ya está en uso por otro usuario");
+            }
+        }
+
+        const updateData: Partial<IUser> = {};
+        if (userData.username !== undefined) updateData.username = userData.username;
+        if (userData.email !== undefined) updateData.email = userData.email;
+        if ((userData as IUser).password !== undefined) updateData.password = userData.password;
+        if ((userData as IUser).isActive !== undefined) updateData.isActive = (userData as IUser).isActive;
+
+        const affectedRows = await this.updateById<IUser>(id, updateData);
         return affectedRows > 0;
     }
 
     public async deleteUser(id: number): Promise<boolean> {
-        const affectedRows = await this.updateById<IUser>(id, { is_active: false });
+        const affectedRows = await this.updateById<IUser>(id, { isActive: false });
         return affectedRows > 0;
     }
 

@@ -7,15 +7,15 @@ export type BookSourse = 'openlibrary' | 'manual';
 
 export interface IBook {
     id?: number;
-    id_language?: number;
+    idLanguage?: string;
     title: string;
     synopsis?: string;
-    publication_date?: Date;
+    publicationDate?: Date;
     rating?: number;
-    cover_url?: string;
+    coverUrl?: string;
     externalId?: string;
     source: BookSourse;
-    is_active?: boolean;
+    isActive?: boolean;
 
     language?: ILanguage;
     authors?: IAuthor[];

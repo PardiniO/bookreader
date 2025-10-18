@@ -2,10 +2,10 @@ import { IReadingProgress } from "../library/readingProgressInterface";
 
 export interface INote {
     id?: number;
-    id_progress: number;
+    idProgress: number;
     text: string;
     page?: number;
-    created_at: Date;
+    createdAt: Date;
 
     progress?: IReadingProgress;
 }
