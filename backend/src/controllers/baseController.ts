@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { IApiResponse, IPaginationParams } from '../interfaces/index';
+import { IApiResponse, IPaginationParams } from '../interfaces';
 
 export abstract class BaseController {
     protected sendResponse<T>(
@@ -132,4 +132,4 @@ export abstract class BaseController {
         }
         return numParam;
     }
-    }
+}
