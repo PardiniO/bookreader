@@ -20,5 +20,5 @@ export interface IBook {
     language?: ILanguage;
     authors?: IAuthor[];
     genres?: IGenre[];
-    bookFiles?: IBookFile;
+    bookFiles?: IBookFile[];
 }
