@@ -1,17 +1,37 @@
 import { Router } from "express";
 import { UserRouter } from "./userRoutes";
 import { BookRouter } from "./bookRoutes";
+import { AuthorRouter } from "./authorRoutes";
+import { FileRouter } from "./fileRoutes";
+import { GenreRouter } from "./genreRoutes";
+import { HighlightRouter } from "./highlightRoutes";
+import { LanguageRouter } from "./languageRoutes";
+import { LibraryRouter } from "./libraryRoutes";
+import { NationalityRouter } from "./nationalityRoutes";
+import { NoteRouter } from "./noteRoutes";
+import { ProgressRouter } from "./progressRoutes";
+import { ReadingStatusRouter } from "./readingStatusRouter";
 
 export class ApiRoutes {
     public router: Router;
-    private userRouter: UserRouter;
-    private bookRouter: BookRouter;
+    private userRoutes: UserRouter;
+    private bookRoutes: BookRouter;
+    private authorRoutes: AuthorRouter;
+    private fileRoutes: FileRouter;
+    private genreRoutes: GenreRouter;
+    private highlighRoutes: HighlightRouter;
+    private languageRoutes: LanguageRouter;
+    private libraryRoutes: LibraryRouter;
+    private nationalityRoutes: NationalityRouter;
+    private noteRoutes: NoteRouter;
+    private progressRoutes: ProgressRouter;
+    private readingStatusRoutes: ReadingStatusRouter;
 
 
     constructor() {
         this.router = Router();
-        this.userRouter = new UserRouter();
-        this.bookRouter = new BookRouter();
+        this.userRoutes = new UserRouter();
+        this.bookRoutes = new BookRouter();
 
 
         this.initializeRoutes();
@@ -53,7 +73,7 @@ export class ApiRoutes {
 
         //registrar rutas de módulos
         this.router.use('/users', this.userRouter.geRouter());
-        this.router.use('/books', this.bookRouter.getRouter());
+        this.router.use('/books', this.bookRouter.getRouter() as unknown as Router);
         
 
     }
