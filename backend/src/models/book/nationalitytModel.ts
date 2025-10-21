@@ -10,7 +10,7 @@ export class NationalityModel extends BaseModel {
         return await this.create<INationality>(nationalityData);
     }
 
-    public async getAllBooks(pagination?: IPaginationParams): Promise<INationality[] | IPaginatedResponse<INationality> | undefined> {
+    public async getAllNationalities(pagination?: IPaginationParams): Promise<INationality[] | IPaginatedResponse<INationality> | undefined> {
         if (pagination) {
             const [nationalities, total] = await Promise.all([
                 this.findAll<INationality>('1=1', [], pagination),
