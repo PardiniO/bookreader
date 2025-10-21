@@ -10,7 +10,7 @@ export class GenreModel extends BaseModel {
         return await this.create<IGenre>(genreData);
     }
 
-    public async getAllBooks(pagination?: IPaginationParams): Promise<IGenre[] | IPaginatedResponse<IGenre> | undefined> {
+    public async getAllGenres(pagination?: IPaginationParams): Promise<IGenre[] | IPaginatedResponse<IGenre> | undefined> {
         if (pagination) {
             const [genres, total] = await Promise.all([
                 this.findAll<IGenre>('1=1', [], pagination),
