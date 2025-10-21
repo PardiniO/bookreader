@@ -12,14 +12,14 @@ export class LanguageController extends BaseController {
     }
 
     public getAll = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
+        await this.handleAsyncRoute(req, res, async () => {
             const languages = await this.languageModel.getAllLanguages();
             this.sendSuccess(res, 'Idiomas obtenidos exitosamente', languages);
         });
     };
 
     public getById = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
+        await this.handleAsyncRoute(req, res, async () => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
                 this.sendError(res, 'ID de idioma inválido');
@@ -35,7 +35,7 @@ export class LanguageController extends BaseController {
     };
 
     public create = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
+        await this.handleAsyncRoute(req, res, async () => {
             if (!this.validateRequest(req, res)) return;
             const languageData: Omit<ILanguage, 'id'> = req.body;
             const languageId = await this.languageModel.createLanguage(languageData);
@@ -44,7 +44,7 @@ export class LanguageController extends BaseController {
     };
 
     public update = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
+        await this.handleAsyncRoute(req, res, async () => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
                 this.sendError(res, 'ID de idioma inválido');
@@ -61,7 +61,7 @@ export class LanguageController extends BaseController {
     };
 
     public delete = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
+        await this.handleAsyncRoute(req, res, async () => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
                 this.sendError(res, 'ID de idioma inválido');
