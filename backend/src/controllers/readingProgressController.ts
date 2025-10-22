@@ -3,7 +3,7 @@ import { BaseController } from "./baseController";
 import { ReadingProgressModel } from "@/models";
 import { IReadingProgress } from "@/interfaces";
 
-export class readingProgressController extends BaseController {
+export class ReadingProgressController extends BaseController {
     private readingProgressModel: ReadingProgressModel;
     
     constructor() {
