@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { INote, IPaginatedResponse, IPaginationParams } from "@/interfaces";
+import { INote } from "@/interfaces";
 import { NoteModel } from "../models";
 import { BaseController } from "./baseController";
 
@@ -11,14 +11,13 @@ export class NoteController extends BaseController {
         this.noteModel = new NoteModel();
     }
 
-    public getAll = async (req: Request, res: Response): Promise<void> => {
+    public getAllNotes = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async () => {
             const notes = await this.noteModel.getAllNotes();
             this.sendSuccess(res, 'Notas obtenidas exitosamente', notes);
         });
     };
 
-    // GET /notes/:id
     public getNoteById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
         if (!this.isValidId(req.params.id)) {
@@ -36,7 +35,6 @@ export class NoteController extends BaseController {
         });
     };
 
-    // POST /notes
     public createNote = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
         if (!this.validateRequest(req, res)) return;
@@ -49,6 +47,7 @@ export class NoteController extends BaseController {
             text,
             page: page || undefined,
             createdAt: new Date(),
+            updatedAt: new Date()
         };
 
         const createdNote = await this.noteModel.createNote(newNoteData);
@@ -56,7 +55,6 @@ export class NoteController extends BaseController {
         });
     };
 
-    // PUT /notes/:id
     public updateNote = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
         if (!this.isValidId(req.params.id)) {
@@ -79,7 +77,6 @@ export class NoteController extends BaseController {
         });
     };
 
-    // DELETE /notes/:id
     public deleteNote = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
         if (!this.isValidId(req.params.id)) {

@@ -6,6 +6,8 @@ export interface IHighlight {
     highlightedText: string;
     page?: number;
     color?: string;
+    createdAt: Date;
+    updatedAt: Date;
 
     progress?: IReadingProgress;
 }

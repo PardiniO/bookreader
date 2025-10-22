@@ -6,6 +6,7 @@ export interface INote {
     text: string;
     page?: number;
     createdAt: Date;
+    updatedAt: Date;
 
     progress?: IReadingProgress;
 }
