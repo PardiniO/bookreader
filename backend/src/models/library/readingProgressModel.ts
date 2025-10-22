@@ -6,7 +6,7 @@ export class ReadingProgressModel extends BaseModel {
         super('progresses');
     }
 
-    public async createStatus(progressData: Omit<IReadingProgress, 'id'>): Promise<number> {
+    public async createProgress(progressData: Omit<IReadingProgress, 'id'>): Promise<number> {
         return await this.create(progressData);
     }
 
@@ -29,7 +29,13 @@ export class ReadingProgressModel extends BaseModel {
 
         return await this.findAll<IReadingProgress>(conditions, values);
     }
+
     public async getProgressById(id: number): Promise<IReadingProgress | null> {
         return await this.findById<IReadingProgress>(id);
+    }
+
+    public async updateProgress(id: number, progressData: Partial<IReadingProgress>): Promise<boolean> {
+        const affectedRows = await this.updateById<IReadingProgress>(id, progressData);
+        return affectedRows > 0;
     }
 }
