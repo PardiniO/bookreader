@@ -17,3 +17,4 @@ export * from './common/paginationParamsInterface';
 export * from './library/readingProgressInterface';
 export * from './library/readingStatusInterface';
 export * from './user/userInterface';
+export * from './common/authenticatedReqInterface';
