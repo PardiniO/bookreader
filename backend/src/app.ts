@@ -3,11 +3,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { Database } from './config/database';
+import { Database } from './config/db';
 import { apiRoutes } from './routes';
 import { ErrorMiddleware } from './middlewares';
 
-// Cargar variables de entorno
 dotenv.config();
 
 export class App {

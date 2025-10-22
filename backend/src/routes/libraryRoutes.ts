@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { LibraryController } from "../controllers/libraryController";
+import { LibraryController } from "../controllers/library/libraryController";
 import { ValidationMiddleware } from "../middlewares";
 
 export class LibraryRouter {

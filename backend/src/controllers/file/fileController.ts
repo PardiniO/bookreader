@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { FileModel } from "../models/file/fileModel";
-import { BaseController } from "./baseController";
-import { IFile } from "../interfaces";
+import { FileModel } from "../../models/file/fileModel";
+import { BaseController } from "../baseController";
+import { IFile } from "../../interfaces";
 
 export class FileController extends BaseController {
     private fileModel: FileModel;

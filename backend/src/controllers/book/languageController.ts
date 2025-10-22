@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { LanguageModel } from '../models/book/languageModel';
-import { BaseController } from './baseController';
-import { ILanguage } from '../interfaces';
+import { LanguageModel } from '../../models/book/languageModel';
+import { BaseController } from '../baseController';
+import { ILanguage } from '../../interfaces';
 
 export class LanguageController extends BaseController {
     private languageModel: LanguageModel;

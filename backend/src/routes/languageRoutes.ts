@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { LanguageController } from "../controllers/languageController";
+import { LanguageController } from "../controllers/book/languageController";
 import { ValidationMiddleware } from "../middlewares";
 
 export class LanguageRouter {

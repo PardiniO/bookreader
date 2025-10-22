@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { GenreModel } from '../models/book/genreModel';
-import { BaseController } from './baseController';
-import { IGenre } from '../interfaces';
+import { GenreModel } from '../../models/book/genreModel';
+import { BaseController } from '../baseController';
+import { IGenre } from '../../interfaces';
 
 export class GenreController extends BaseController {
     private genreModel: GenreModel;

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { AuthorModel } from '../models/book/authorModel';
-import { BaseController } from './baseController';
-import { IAuthor } from '../interfaces';
+import { AuthorModel } from '../../models/book/authorModel';
+import { BaseController } from '../baseController';
+import { IAuthor } from '../../interfaces';
 
 export class AuthorController extends BaseController {
     private authorModel: AuthorModel;

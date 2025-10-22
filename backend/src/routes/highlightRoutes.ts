@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { HighlightController } from "../controllers/highlightController";
+import { HighlightController } from "../controllers/file/highlightController";
 import { ValidationMiddleware } from "../middlewares";
 
 export class HighlightRouter {

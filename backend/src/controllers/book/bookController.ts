@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { BookModel } from '../models/book/bookModel';
-import { BaseController } from './baseController';
-import { IBook } from '../interfaces';
+import { BookModel } from '../../models/book/bookModel';
+import { BaseController } from '../baseController';
+import { IBook } from '../../interfaces';
 
 export class BookController extends BaseController {
     private bookModel: BookModel;

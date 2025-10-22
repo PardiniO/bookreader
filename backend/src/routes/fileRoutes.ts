@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { FileController } from "../controllers/fileController";
+import { FileController } from "../controllers/file/fileController";
 import { ValidationMiddleware } from "../middlewares";
 import multer from "multer";
 

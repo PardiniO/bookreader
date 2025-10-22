@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { INote } from "@/interfaces";
-import { NoteModel } from "../models";
-import { BaseController } from "./baseController";
+import { NoteModel } from "../../models";
+import { BaseController } from "../baseController";
 
 export class NoteController extends BaseController {
     private noteModel: NoteModel;

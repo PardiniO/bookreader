@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { NationalityModel } from '../models/book/nationalitytModel';
-import { BaseController } from './baseController';
-import { INationality } from '../interfaces';
+import { NationalityModel } from '../../models/book/nationalitytModel';
+import { BaseController } from '../baseController';
+import { INationality } from '../../interfaces';
 
 export class NationalityController extends BaseController {
     private nationalityModel: NationalityModel;

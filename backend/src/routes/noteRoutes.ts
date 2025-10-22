@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { NoteController } from "../controllers/noteController";
+import { NoteController } from "../controllers/file/noteController";
 import { ValidationMiddleware } from "../middlewares";
 
 export class NoteRouter {

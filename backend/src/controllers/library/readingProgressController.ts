@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BaseController } from "./baseController";
+import { BaseController } from "../baseController";
 import { ReadingProgressModel } from "@/models";
 import { IReadingProgress } from "@/interfaces";
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { LibraryModel } from "@/models";
-import { BaseController } from "./baseController";
+import { BaseController } from "../baseController";
 import { ILibary } from "@/interfaces";
 
 export class LibraryController extends BaseController {

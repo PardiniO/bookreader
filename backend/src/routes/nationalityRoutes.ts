@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { NationalityController } from "../controllers/nationalityController";
+import { NationalityController } from "../controllers/book/nationalityController";
 import { ValidationMiddleware } from "../middlewares";
 
 export class NationalityRouter {
