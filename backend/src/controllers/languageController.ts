@@ -11,14 +11,14 @@ export class LanguageController extends BaseController {
         this.languageModel = new LanguageModel();
     }
 
-    public getAll = async (req: Request, res: Response): Promise<void> => {
+    public getAllLanguages = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async () => {
             const languages = await this.languageModel.getAllLanguages();
             this.sendSuccess(res, 'Idiomas obtenidos exitosamente', languages);
         });
     };
 
-    public getById = async (req: Request, res: Response): Promise<void> => {
+    public getLanguageById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async () => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -34,7 +34,7 @@ export class LanguageController extends BaseController {
         });
     };
 
-    public create = async (req: Request, res: Response): Promise<void> => {
+    public createLanguage = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async () => {
             if (!this.validateRequest(req, res)) return;
             const languageData: Omit<ILanguage, 'id'> = req.body;
@@ -43,7 +43,7 @@ export class LanguageController extends BaseController {
         });
     };
 
-    public update = async (req: Request, res: Response): Promise<void> => {
+    public updateLanguage = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async () => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -60,7 +60,7 @@ export class LanguageController extends BaseController {
         });
     };
 
-    public delete = async (req: Request, res: Response): Promise<void> => {
+    public deleteLanguage = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async () => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
