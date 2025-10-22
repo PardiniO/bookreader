@@ -11,7 +11,7 @@ export class FileController extends BaseController {
         this.fileModel = new FileModel();
     }
 
-    public getAll = async (req: Request, res: Response): Promise<void> => {
+    public getAllFiles = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const pagination = this.getPaginationParams(req);
             const files = await this.fileModel.getAllFiles(pagination);
@@ -19,7 +19,7 @@ export class FileController extends BaseController {
         });
     };
 
-    public getById = async (req: Request, res: Response): Promise<void> => {
+    public getFileById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
