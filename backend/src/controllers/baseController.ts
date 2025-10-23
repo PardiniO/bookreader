@@ -57,18 +57,18 @@ export abstract class BaseController {
 
     protected sendValidationError(res: Response, errors: any[]): void {
         this.sendError(
-        res,
-        'Errores de validación',
-        errors.map(err => err.msg).join(', '),
-        422
+            res,
+            'Errores de validación',
+            errors.map(err => err.msg).join(', '),
+            422
         );
     }
 
     protected validateRequest(req: Request, res: Response): boolean {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-        this.sendValidationError(res, errors.array());
-        return false;
+            this.sendValidationError(res, errors.array());
+            return false;
         }
         return true;
     }
@@ -87,27 +87,27 @@ export abstract class BaseController {
         handler: (req: Request, res: Response) => Promise<void>
     ): Promise<void> {
         try {
-        await handler(req, res);
+            await handler(req, res);
         } catch (error) {
-        console.error('Error en controlador:', error);
+            console.error('Error en controlador:', error);
         
-        if (error instanceof Error) {
-            // Errores de validación o de negocio
-            if (error.message.includes('no encontrado') || error.message.includes('not found')) {
-            this.sendNotFound(res, error.message);
-            } else if (
-            error.message.includes('ya existe') ||
-            error.message.includes('duplicado') ||
-            error.message.includes('inválido') ||
-            error.message.includes('insuficiente')
-            ) {
-            this.sendError(res, error.message);
+            if (error instanceof Error) {
+                // Errores de validación o de negocio
+                if (error.message.includes('no encontrado') || error.message.includes('not found')) {
+                    this.sendNotFound(res, error.message);
+                } else if (
+                    error.message.includes('ya existe') ||
+                    error.message.includes('duplicado') ||
+                    error.message.includes('inválido') ||
+                    error.message.includes('insuficiente')
+                ) {
+                    this.sendError(res, error.message);
+                } else {
+                    this.sendServerError(res, error.message);
+                }
             } else {
-            this.sendServerError(res, error.message);
+                this.sendServerError(res);
             }
-        } else {
-            this.sendServerError(res);
-        }
         }
     }
 
@@ -115,7 +115,7 @@ export abstract class BaseController {
         // Asumiendo que el middleware de autenticación agrega el usuario al request
         const user = (req as any).user;
         if (!user || !user.id) {
-        throw new Error('Usuario no autenticado');
+            throw new Error('Usuario no autenticado');
         }
         return user.id;
     }
@@ -128,7 +128,7 @@ export abstract class BaseController {
     protected parseNumericParam(param: string, paramName: string): number {
         const numParam = parseInt(param);
         if (isNaN(numParam) || numParam <= 0) {
-        throw new Error(`${paramName} debe ser un número válido mayor a 0`);
+            throw new Error(`${paramName} debe ser un número válido mayor a 0`);
         }
         return numParam;
     }

@@ -3,18 +3,18 @@ import { IAuthor } from "./authorInterface";
 import { IGenre } from "./genreInterface";
 import { IBookFile } from "./bookfileInterface";
 
-export type BookSourse = 'openlibrary' | 'manual';
+export type BookSource = 'openlibrary' | 'manual';
 
 export interface IBook {
     id?: number;
-    idLanguage?: string;
+    idLanguage?: number;
     title: string;
     synopsis?: string;
     publicationDate?: Date;
     rating?: number;
     coverUrl?: string;
     externalId?: string;
-    source: BookSourse;
+    source: BookSource;
     isActive?: boolean;
 
     language?: ILanguage;

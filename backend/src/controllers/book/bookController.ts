@@ -9,92 +9,145 @@ export class BookController extends BaseController {
     constructor() {
         super();
         this.bookModel = new BookModel();
-    }
+    }    
 
-    public getAll = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
-            const pagination = this.getPaginationParams(req);
-            const books = await this.bookModel.getAllBooks(pagination);
-            this.sendSuccess(res, 'Libros obtenidos exitosamente', books);
-        });
-    };
-
-    public getById = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
-            const { id } = req.params;
-            if (!this.isValidId(id)) {
-                this.sendError(res, 'ID de libro inválido');
-                return;
-            }
-            const book = await this.bookModel.getBookById(parseInt(id));
-            if (!book) {
-                this.sendNotFound(res, 'Libro no encontrado');
-                return;
-            }
-            this.sendSuccess(res, 'Libro obtenido exitosamente', book);
-        });
-    };
-
-    public create = async (req: Request, res: Response): Promise<void> => {
+    public createBook = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             if (!this.validateRequest(req, res)) return;
+
             const bookData: Omit<IBook, 'id'> = req.body;
             const bookId = await this.bookModel.createBook(bookData);
+            
             this.sendSuccess(res, 'Libro creado exitosamente', { id: bookId }, 201);
         });
     };
 
-    public update = async (req: Request, res: Response): Promise<void> => {
+    public getAllBooks = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const pagination = this.getPaginationParams(req);
+            const books = await this.bookModel.getAllBooks(pagination);
+            this.sendSuccess(res, 'Libros obtenidos exitosamente', books);
+        });    
+    };    
+
+    public getBooksById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
+
+            if (!this.isValidId(id)) {
+                this.sendError(res, 'ID de libro inválido');
+                return;
+            }    
+
+            const book = await this.bookModel.getBookById(parseInt(id));
+            if (!book) {
+                this.sendNotFound(res, 'Libro no encontrado');
+                return;
+            }    
+            
+            this.sendSuccess(res, 'Libro obtenido exitosamente', book);
+        });    
+    };      
+    
+    public updateBook = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { id } = req.params;
+    
             if (!this.isValidId(id)) {
                 this.sendError(res, 'ID de libro inválido');
                 return;
             }
+    
             if (!this.validateRequest(req, res)) return;
+            
             const updated = await this.bookModel.updateBook(parseInt(id), req.body);
             if (!updated) {
                 this.sendNotFound(res, 'Libro no encontrado');
                 return;
             }
+    
             this.sendSuccess(res, 'Libro actualizado exitosamente');
         });
     };
 
-    public delete = async (req: Request, res: Response): Promise<void> => {
+    public deleteBook = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
+    
             if (!this.isValidId(id)) {
                 this.sendError(res, 'ID de libro inválido');
                 return;
             }
+    
             const deleted = await this.bookModel.deleteBook(parseInt(id));
             if (!deleted) {
                 this.sendNotFound(res, 'Libro no encontrado');
                 return;
             }
+    
             this.sendSuccess(res, 'Libro eliminado exitosamente');
         });
     };
 
-    public search = async (req: Request, res: Response): Promise<void> => {
+    public searchBook = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
-            const { q: searchTerm } = req.query;
+            const { query: searchTerm } = req.query;
             if (!searchTerm || typeof searchTerm !== 'string') {
                 this.sendError(res, 'Término de búsqueda requerido');
                 return;
             }
+
             const pagination = this.getPaginationParams(req);
             const books = await this.bookModel.searchBooks(searchTerm, pagination);
-            this.sendSuccess(res, 'Búsqueda completada', books);
+            
+            this.sendSuccess(res, 'Búsqueda de libros completada', books);
         });
     };
 
-    // Métodos para relaciones (autores, géneros, archivos)
-    public addAuthors = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public removeAuthor = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public addGenres = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public removeGenre = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public addFiles = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public removeFile = async (req: Request, res: Response): Promise<void> => { /* ... */ };
+    public getBooksByAuthor = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { authorId } = req.params;
+
+            if (!this.isValidId(authorId)) {
+                this.sendError(res, 'ID de autor inválido');
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const books = await this.bookModel.getBooksByAuthor(parseInt(authorId), pagination);
+
+            this.sendSuccess(res, 'Libros por autor obtenidos exitosamente', books);
+        });
+    };
+    
+    public getBooksByGenre = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { genreId } = req.params;
+
+            if (!this.isValidId(genreId)) {
+                this.sendError(res, 'ID de género inválido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const books = await this.bookModel.getBookByGenre(parseInt(genreId), pagination);
+
+            this.sendSuccess(res, 'Libros por género obtenidos exitosamente', books);
+        });
+    };
+    
+    public getBooksByLanguage = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { languageId } = req.params;
+
+            if (!this.isValidId(languageId)) {
+                this.sendError(res, 'ID de género inválido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const books = await this.bookModel.getBookByLanguage(parseInt(languageId), pagination);
+
+            this.sendSuccess(res, 'Libros por idioma obtenidos exitosamente', books);
+        });
+    };
 }
