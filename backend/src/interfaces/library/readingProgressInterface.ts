@@ -8,8 +8,8 @@ export interface IReadingProgress {
     idUser: number;
     idFile: number;
     currentPage: number;
-    progressPercent: number;
-    lastRead: Date;
+    progressPercent?: number;
+    lastRead?: Date;
 
     user?: IUser;
     file?: IFile;
