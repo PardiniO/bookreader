@@ -9,5 +9,5 @@ export { LibraryController } from './library/libraryController';
 export { NationalityController } from './book/nationalityController';
 export { NoteController } from './file/noteController';
 export { ReadingProgressController } from './library/readingProgressController';
-export { ReadingStatusController } from './library/readingStatus';
+export { ReadingStatusController } from './library/readingStatusController';
 export { UserController } from './userController';

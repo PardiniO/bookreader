@@ -3,13 +3,21 @@ import { IReadingStatus, IPaginationParams, IPaginatedResponse } from "../../int
 
 export class ReadingStatusModel extends BaseModel {
     constructor() {
-        super('reading_status');
+        super('reading_statuses');
     }
 
     public async createStatus(statusData: Omit<IReadingStatus, 'id'>): Promise<number> {
+        const validValues = ['reading', 'to_read', 'read'];
+        if (!validValues.includes(statusData.status)) {
+            throw new Error("Valor de estado de lectura inválido");
+        }
+        
+        const exists = await this.exists('status = ?', [statusData.status]);
+        if (exists) throw new Error("Ya existe un estado de lectura");
+        
         return await this.create<IReadingStatus>(statusData);
     }
-
+    
     public async getAllStatuses(pagination?: IPaginationParams): Promise<IReadingStatus[] | IPaginatedResponse<IReadingStatus>> {
         if (pagination) {
             const [statuses, total] = await Promise.all([
@@ -23,6 +31,10 @@ export class ReadingStatusModel extends BaseModel {
 
     public async getStatusById(id: number): Promise<IReadingStatus | null> {
         return await this.findById<IReadingStatus>(id);
+    }
+
+    public async getStatusByValue(value: string): Promise<IReadingStatus | null> {
+        return await this.findOne<IReadingStatus>('status = ?', [value]);
     }
 
     public async updateStatus(id: number, statusData: Partial<IReadingStatus>): Promise<boolean> {
