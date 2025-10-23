@@ -11,7 +11,7 @@ export class AuthorController extends BaseController {
         this.authorModel = new AuthorModel();
     }
 
-    public getAll = async (req: Request, res: Response): Promise<void> => {
+    public getAllAuthors = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const pagination = this.getPaginationParams(req);
             const authors = await this.authorModel.getAllAuthors(pagination);
@@ -19,32 +19,59 @@ export class AuthorController extends BaseController {
         });
     };
 
-    public getById = async (req: Request, res: Response): Promise<void> => {
+    public getAuthorById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
                 this.sendError(res, 'ID de autor inválido');
                 return;
             }
+
             const author = await this.authorModel.getAuthorById(parseInt(id));
             if (!author) {
                 this.sendNotFound(res, 'Autor no encontrado');
                 return;
             }
+            
             this.sendSuccess(res, 'Autor obtenido exitosamente', author);
         });
     };
 
-    public create = async (req: Request, res: Response): Promise<void> => {
+    public getAuthorByNationality = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async () => {
+            const { nationalityId } = req.params;
+            if (!this.isValidId(nationalityId)) {
+                this.sendError(res, 'ID de nacionalidad inválido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const authors = await this.authorModel.getAuthorByNationalityId(parseInt(nationalityId), pagination);
+            if (!authors) {
+                this.sendNotFound(res, 'Autor no encontrado');
+                return;
+            }
+            
+            this.sendSuccess(res, 'Autor obtenido exitosamente', authors);
+        });
+    };
+
+    public createAuthor = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             if (!this.validateRequest(req, res)) return;
+            
             const authorData: Omit<IAuthor, 'id'> = req.body;
+            if (!authorData.name?.trim()) {
+                this.sendError(res, 'Nombre del/la autor/a requerido');
+                return;
+            }
+
             const authorId = await this.authorModel.createAuthor(authorData);
             this.sendSuccess(res, 'Autor creado exitosamente', { id: authorId }, 201);
         });
     };
 
-    public update = async (req: Request, res: Response): Promise<void> => {
+    public updateAuthor = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -52,6 +79,7 @@ export class AuthorController extends BaseController {
                 return;
             }
             if (!this.validateRequest(req, res)) return;
+            
             const updated = await this.authorModel.updateAuthor(parseInt(id), req.body);
             if (!updated) {
                 this.sendNotFound(res, 'Autor no encontrado');
@@ -61,7 +89,7 @@ export class AuthorController extends BaseController {
         });
     };
 
-    public delete = async (req: Request, res: Response): Promise<void> => {
+    public deleteAuthor = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -77,7 +105,7 @@ export class AuthorController extends BaseController {
         });
     };
 
-    public search = async (req: Request, res: Response): Promise<void> => {
+    public searchAuthors = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { q: searchTerm } = req.query;
             if (!searchTerm || typeof searchTerm !== 'string') {

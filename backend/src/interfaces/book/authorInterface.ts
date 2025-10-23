@@ -1,7 +1,7 @@
 import { INationality } from "./nationalityInterface";
 
 export interface IAuthor {
-    id: number;
+    id?: number;
     idNationality?: number;
     name: string;
     biography?: string;
