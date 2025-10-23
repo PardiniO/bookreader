@@ -2,7 +2,7 @@ import { IBook } from "../book/bookInterface";
 import { IReadingStatus } from "./readingStatusInterface";
 import { IUser } from "../user/userInterface";
 
-export interface ILibary {
+export interface ILibrary {
     id?: number;
     idUser: number;
     idBook: number;
