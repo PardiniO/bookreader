@@ -6,13 +6,20 @@ export class FileModel extends BaseModel {
         super('files');
     }
 
+    private readonly ALLOWED_MIME_TYPES = ['application/pdf', 'application/epub+zip'];
+
     public async createFile(fileData: Omit<IFile, 'id'>): Promise<number> {
+        if (!this.ALLOWED_MIME_TYPES.includes(fileData.mimetype)) {
+            throw new Error(`Tipo de archivo no permitido: ${fileData.mimetype}`);
+        }
+
         const insertData: Partial<IFile> = {
-            idUser: (fileData as IFile).idUser ?? (fileData as IFile).idUser,
+            idUser: fileData.idUser,
             filename: fileData.filename,
             mimetype: fileData.mimetype,
+            path: fileData.path,
             size: fileData.size,
-            uploadDate: (fileData as IFile).uploadDate ?? (fileData as IFile).uploadDate
+            uploadDate: fileData.uploadDate ?? new Date()
         };
         return await this.create(insertData);
     }
@@ -47,49 +54,27 @@ export class FileModel extends BaseModel {
 
         return await this.findAll<IFile>(conditions, values);
     }
-
-    public async getFileByBookId(bookId: number, pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
-        const conditions = 'book_file.id_book = ?';
-        const values = [bookId.toString()];
-        const table = this.tableName;
-
-        if (pagination) {
-            let sql = `SELECT file.* FROM ${table} f
-                        JOIN book_file ON book_file.id_file = f.id
-                        WHERE ${conditions}
-                        LIMIT ? OFFSET ?`;
-            const files = await this.db.query<IFile>(sql, [bookId, pagination.limit, pagination.offset]);
-            const countSql = `SELECT COUNT(*) as total FROM ${table} f
-                        JOIN book_file ON book_file.id_file = f.id
-                        WHERE ${conditions}`;
-            const countRes = await this.db.queryOne<{ total: number }>(countSql, [bookId]);
-            const total = countRes?.total || 0;
-
-            return this.buildPaginatedResponse(files, pagination, total);
-        }
-
-        let sql = `SELECT file.* FROM ${table} f
-                    JOIN book_file ON book_file.id_file = f.id
-                    WHERE ${conditions}`;
-        return await this.db.query<IFile>(sql, values);
-    }
-
+    
     public async updateFile(id: number, fileData: Partial<IFile>, requestingUserId?: number): Promise<boolean> {
         if (requestingUserId !== undefined) {
             const ok = await this.validateOwnership(id, requestingUserId);
             if (!ok) throw new Error("No tiene autorización para actualizar este archivo");
         }
-
+        
+        if (fileData.mimetype && !this.ALLOWED_MIME_TYPES.includes(fileData.mimetype)) {
+            throw new Error(`Tipo MIME inválido: ${fileData.mimetype}`);
+        }
+        
         const updateData: Partial<IFile> = {};
         if (fileData.filename !== undefined) updateData.filename = fileData.filename;
         if (fileData.mimetype !== undefined) updateData.mimetype = fileData.mimetype;
         if (fileData.path !== undefined) updateData.path = fileData.path;
         if (fileData.size !== undefined) updateData.size = fileData.size;
-
+        
         const affectedRows = await this.updateById<IFile>(id, fileData);
         return affectedRows > 0;
     }
-
+    
     public async deleteFile(id: number, requestingUserId?: number): Promise<boolean> {
         if (requestingUserId !== undefined) {
             const ok = await this.validateOwnership(id, requestingUserId);
@@ -115,7 +100,41 @@ export class FileModel extends BaseModel {
 
         return await this.findAll<IFile>(conditions, values);
     }
+    
+    public async validateOwnership(fileId: number, userId: number): Promise<boolean> {
+        const file = await this.findById<IFile>(fileId);
+        if (!file) return false;
+        return file.idUser === userId;
+    }
 
+//Métodos todavía no implementados
+/**   
+    public async getFileByBookId(bookId: number, pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
+        const conditions = 'book_file.id_book = ?';
+        const values = [bookId.toString()];
+        const table = this.tableName;
+
+        if (pagination) {
+            let sql = `SELECT file.* FROM ${table} f
+                        JOIN book_file ON book_file.id_file = f.id
+                        WHERE ${conditions}
+                        LIMIT ? OFFSET ?`;
+            const files = await this.db.query<IFile>(sql, [bookId, pagination.limit, pagination.offset]);
+            const countSql = `SELECT COUNT(*) as total FROM ${table} f
+                        JOIN book_file ON book_file.id_file = f.id
+                        WHERE ${conditions}`;
+            const countRes = await this.db.queryOne<{ total: number }>(countSql, [bookId]);
+            const total = countRes?.total || 0;
+
+            return this.buildPaginatedResponse(files, pagination, total);
+        }
+
+        let sql = `SELECT file.* FROM ${table} f
+                    JOIN book_file ON book_file.id_file = f.id
+                    WHERE ${conditions}`;
+        return await this.db.query<IFile>(sql, values);
+    }
+    
     public async getFileForDownload(id: number, requestingUserId?: number): Promise<IFile | null> {
         const file = await this.findById<IFile>(id);
         if (!file) return null;
@@ -149,12 +168,5 @@ export class FileModel extends BaseModel {
         const linkedCount = countRes?.total || 0;
         return { exists: true, linkedCount };
     }
-
-    public async validateOwnership(fileId: number, userId: number): Promise<boolean> {
-        const file = await this.findById<IFile>(fileId);
-        if (!file) return false;
-        
-        const owner = (file as IFile).idUser ?? (file as IFile).idUser;
-        return owner === userId;
-    }
+*/
 }

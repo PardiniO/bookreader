@@ -3,14 +3,30 @@ import { FileModel } from "../../models/file/fileModel";
 import { BaseController } from "../baseController";
 import { IFile } from "../../interfaces";
 
+
 export class FileController extends BaseController {
     private fileModel: FileModel;
-
+    
     constructor() {
         super();
         this.fileModel = new FileModel();
     }
 
+    public createFile = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            if (!this.validateRequest(req, res)) return;
+            const fileData: Omit<IFile, 'id'> = req.body;
+
+            if (!fileData.mimetype || !fileData.path) {
+                this.sendError(res, 'Datos del archivo incompletos (mimetype o path faltantes)');
+                return;
+            }
+
+            const fileId = await this.fileModel.createFile(fileData);
+            this.sendSuccess(res, 'Archivo creado exitosamente', { id: fileId }, 201);
+        });
+    };
+    
     public getAllFiles = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const pagination = this.getPaginationParams(req);
@@ -35,26 +51,19 @@ export class FileController extends BaseController {
         });
     };
     
-    public create = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
-            if (!this.validateRequest(req, res)) return;
-            const fileData: Omit<IFile, 'id'> = req.body;
-            const fileId = await this.fileModel.createFile(fileData);
-            this.sendSuccess(res, 'Archivo creado exitosamente', { id: fileId }, 201);
-        });
-    };
-    
-    public update = async (req: Request, res: Response): Promise<void> => {
+    public updateFile = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
                 this.sendError(res, 'ID de archivo inválido');
                 return;
             }
+
             if (!this.validateRequest(req, res)) return;
+
             const updated = await this.fileModel.updateFile(parseInt(id), req.body);
             if (!updated) {
-                this.sendNotFound(res, 'archivo no encontrado');
+                this.sendNotFound(res, 'Archivo no encontrado o no se pudo actualizar');
                 return;
             }
             this.sendSuccess(res, 'Archivo actualizado exitosamente');
@@ -76,7 +85,8 @@ export class FileController extends BaseController {
             this.sendSuccess(res, 'Archivo eliminado exitosamente');
         });
     };
-
+// Método aún no implementado (buscar archivo por nombre, tipo)
+/**
     public search = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { q: searchTerm } = req.query;
@@ -89,12 +99,5 @@ export class FileController extends BaseController {
             this.sendSuccess(res, 'Búsqueda completada', files);
         });
     };
-
-    // Métodos para relaciones (usuarios, libros, estatus de lectura[leido, leyendo, para leer])
-    public addUsers = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public removeUsers = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public addBooks = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public removeBooks = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public addReadingStatus = async (req: Request, res: Response): Promise<void> => { /* ... */ };
-    public removeReadingStatus = async (req: Request, res: Response): Promise<void> => { /* ... */ };
+ */
 }
