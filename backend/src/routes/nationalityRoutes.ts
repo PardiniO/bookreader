@@ -20,7 +20,7 @@ export class NationalityRouter {
         this.router.delete('/:id', this.nationalityController.delete);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

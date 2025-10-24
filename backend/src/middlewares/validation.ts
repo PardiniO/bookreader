@@ -127,27 +127,4 @@ export class ValidationMiddleware {
             .isInt({ min: 1, max: 100 })
             .withMessage('Límite debe ser un número entero entre 1 y 100')
     ];
-
-    public static validatePriceRangeQuery = [
-        query('minPrice')
-            .isFloat({ min: 0 })
-            .withMessage('Precio mínimo debe ser un número mayor o igual a 0'),
-        query('maxPrice')
-            .isFloat({ min: 0 })
-            .withMessage('Precio máximo debe ser un número mayor o igual a 0')
-    ];
-
-    public static validateStockThresholdQuery = [
-        query('threshold')
-            .optional()
-            .isInt({ min: 0 })
-            .withMessage('Umbral debe ser un número entero mayor o igual a 0')
-    ];
-
-    // Validación para actualizar stock
-    public static validateStockUpdate = [
-        body('quantity')
-            .isInt()
-            .withMessage('Cantidad debe ser un número entero (puede ser negativo para decrementar)')
-    ];
 }

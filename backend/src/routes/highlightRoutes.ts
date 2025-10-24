@@ -21,7 +21,7 @@ export class HighlightRouter {
         this.router.get('/search', this.highlightController.search);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

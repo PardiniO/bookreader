@@ -92,7 +92,7 @@ export class UserRouter {
         );
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

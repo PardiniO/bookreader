@@ -70,7 +70,7 @@ export class FileController extends BaseController {
         });
     };
 
-    public delete = async (req: Request, res: Response): Promise<void> => {
+    public deleteFile = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -86,8 +86,7 @@ export class FileController extends BaseController {
         });
     };
 // Método aún no implementado (buscar archivo por nombre, tipo)
-/**
-    public search = async (req: Request, res: Response): Promise<void> => {
+    public searchFile = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { q: searchTerm } = req.query;
             if (!searchTerm || typeof searchTerm !== 'string') {
@@ -99,5 +98,4 @@ export class FileController extends BaseController {
             this.sendSuccess(res, 'Búsqueda completada', files);
         });
     };
- */
 }

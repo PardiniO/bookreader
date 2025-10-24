@@ -20,7 +20,7 @@ export class GenreRouter {
         this.router.delete('/:id', this.genreController.delete);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

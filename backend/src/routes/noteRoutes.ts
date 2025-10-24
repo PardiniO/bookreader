@@ -21,7 +21,7 @@ export class NoteRouter {
         this.router.get('/search', this.noteController.search);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

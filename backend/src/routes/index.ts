@@ -5,7 +5,7 @@ import { AuthorRouter } from "./authorRoutes";
 import { FileRouter } from "./fileRoutes";
 import { GenreRouter } from "./genreRoutes";
 import { HighlightRouter } from "./highlightRoutes";
-import { LanguageRouter } from "./languageRoutes";
+import { LanguagetRouter } from "./languageRoutes";
 import { LibraryRouter } from "./libraryRoutes";
 import { NationalityRouter } from "./nationalityRoutes";
 import { NoteRouter } from "./noteRoutes";
@@ -20,7 +20,7 @@ export class ApiRoutes {
     private fileRoutes: FileRouter;
     private genreRoutes: GenreRouter;
     private highlighRoutes: HighlightRouter;
-    private languageRoutes: LanguageRouter;
+    private languageRoutes: LanguagetRouter;
     private libraryRoutes: LibraryRouter;
     private nationalityRoutes: NationalityRouter;
     private noteRoutes: NoteRouter;
@@ -36,7 +36,7 @@ export class ApiRoutes {
         this.fileRoutes = new FileRouter();
         this.genreRoutes = new GenreRouter();
         this.highlighRoutes = new HighlightRouter();
-        this.languageRoutes = new LanguageRouter();
+        this.languageRoutes = new LanguagetRouter();
         this.libraryRoutes = new LibraryRouter();
         this.nationalityRoutes = new NationalityRouter();
         this.noteRoutes = new NoteRouter();
@@ -72,8 +72,8 @@ export class ApiRoutes {
                     endpoints: {
                         users: '/api/v1/users',
                         books: '/api/v1/books',
-                        files: '/api/v1/files',
                         authors: '/api/v1/authors',
+                        files: '/api/v1/files',
                         libraries: '/api/v1/libraries',
                         progresses: '/api/v1/progress',
                         statuses: '/api/v1/reading-status',
@@ -90,17 +90,18 @@ export class ApiRoutes {
         });
 
         //registrar rutas de módulos
-        this.router.use('/users', this.userRoutes.geRouter());
-        this.router.use('/books', this.bookRoutes.getRouter() as unknown as Router);
-        this.router.use('/files', this.fileRoutes.geRouter());
-        this.router.use('/authors', this.authorRoutes.geRouter());
-        this.router.use('/libraries', this.libraryRoutes.geRouter());
-        this.router.use('/progress', this.progressRoutes.geRouter());
-        this.router.use('/reading-status', this.readingStatusRoutes.geRouter());
-        this.router.use('/notes', this.noteRoutes.geRouter());
-        this.router.use('/highlights', this.highlighRoutes.geRouter());
-        this.router.use('/genres', this.genreRoutes.geRouter());
-        this.router.use('/nationalities', this.nationalityRoutes.geRouter());
+        this.router.use('/users', this.userRoutes.getRouter);
+        this.router.use('/books', this.bookRoutes.getRouter());
+        this.router.use('/files', this.fileRoutes.getRouter());
+        this.router.use('/authors', this.authorRoutes.getRouter());
+        this.router.use('/libraries', this.libraryRoutes.getRouter());
+        this.router.use('/progress', this.progressRoutes.getRouter());
+        this.router.use('/reading-status', this.readingStatusRoutes.getRouter());
+        this.router.use('/notes', this.noteRoutes.getRouter());
+        this.router.use('/highlights', this.highlighRoutes.getRouter());
+        this.router.use('/genres', this.genreRoutes.getRouter());
+        this.router.use('/languages', this.languageRoutes.getRouter());
+        this.router.use('/nationalities', this.nationalityRoutes.getRouter());
     }
 
     public getRouter(): Router {

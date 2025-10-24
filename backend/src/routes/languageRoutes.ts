@@ -2,7 +2,7 @@ import { Router } from "express";
 import { LanguageController } from "../controllers/book/languageController";
 import { ValidationMiddleware } from "../middlewares";
 
-export class LanguageRouter {
+export class LanguagetRouter {
     public router: Router;
     private languageController: LanguageController;
 
@@ -20,7 +20,7 @@ export class LanguageRouter {
         this.router.delete('/:id', this.languageController.delete);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

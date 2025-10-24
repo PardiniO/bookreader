@@ -14,13 +14,13 @@ export class ReadingStatusRouter {
 
     private initializeRoutes(): void {
         this.router.get('/', this.readingStatusController.getAllStatuses);
-        this.router.post('/', ValidationMiddleware.va, this.readingStatusController.create);
-        this.router.get('/:id', this.readingStatusController.getById);
-        this.router.put('/:id', ValidationMiddleware.validateReadingStatusUpdate, this.readingStatusController.update);
-        this.router.delete('/:id', this.readingStatusController.delete);
+        this.router.post('/', ValidationMiddleware.validateStatusParam, this.readingStatusController.createStatus);
+        this.router.get('/:id', this.readingStatusController.getStatusById);
+        this.router.put('/:id', ValidationMiddleware.validateStatusParam, this.readingStatusController.updateStatus);
+        this.router.delete('/:id', this.readingStatusController.deleteStatus);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

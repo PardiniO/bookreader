@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { FileController } from "../controllers/file/fileController";
-import { ValidationMiddleware } from "../middlewares";
+import { AuthMiddleware, ValidationMiddleware } from "../middlewares";
 import multer from "multer";
 
 const upload = multer({ dest: 'uploads/' });
@@ -16,20 +16,63 @@ export class FileRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.post('/upload', upload.single('file'), this.fileController.upload);
-        this.router.get('/', this.fileController.getAll);
-        this.router.get('/search', this.fileController.search);
-        this.router.get('/user/:userId', this.fileController.getByUser);
-        this.router.get('/book/:bookId', this.fileController.getByBook);
-        this.router.get('/:id', this.fileController.getById);
-        this.router.get('/:id/download', this.fileController.download);
-        this.router.put('/:id', ValidationMiddleware.validateFileUpdate, this.fileController.update);
-        this.router.delete('/:id', this.fileController.delete);
-        this.router.post('/:id/link-book', this.fileController.linkToBook);
-        this.router.delete('/:id/unlink-book/:bookId', this.fileController.unlinkFromBook);
+        // Crear archivo
+        this.router.post(
+            '/', 
+            AuthMiddleware.authenticate,
+            upload.single('file'),
+            this.fileController.createFile
+        );
+
+        this.router.get(
+            '/',
+            ValidationMiddleware.validateSearchQuery,
+            this.fileController.getAllFiles
+        );
+
+        this.router.get(
+            '/search',
+            ValidationMiddleware.validateSearchQuery,
+            ValidationMiddleware.validateSearchQuery,
+            this.fileController.searchFile
+        );
+
+        this.router.get(
+            '/:id',
+            ValidationMiddleware.validateIdParam,
+            this.fileController.getFileById
+        );
+
+        this.router.get(
+            '/files',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateSearchQuery,
+            this.fileController.getAllFiles
+        );
+
+        this.router.get(
+            '/user/:userId',
+            this.fileController.getFileById
+        );
+
+        this.router.get('/book/:bookId', this.fileController.getAllFiles);
+        this.router.get('/:id/download', this.fileController.getAllFiles);
+        
+        this.router.put(
+            '/:id',
+            ValidationMiddleware.validateIdParam,
+            this.fileController.updateFile
+        );
+
+        this.router.delete(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.fileController.deleteFile
+        );
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

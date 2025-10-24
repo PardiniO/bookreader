@@ -4,15 +4,15 @@ import { AuthMiddleware, ValidationMiddleware } from "../middlewares";
 
 export class AuthorRouter {
     public router: Router;
-    private authorController: AuthorRouter;
+    private authorController: AuthorController;
 
     constructor() {
         this.router = Router();
-        this.authorController = new AuthorRouter();
+        this.authorController = new AuthorController();
         this.initializeRoutes();
     }
 
-    private initializeRoutes(): Void {
+    private initializeRoutes(): void {
         //rutas públicas 
         this.router.get(
             '/',
@@ -20,15 +20,48 @@ export class AuthorRouter {
             this.authorController.getAllAuthors
         );
         
-        this.router.get('/', this.authorController.getAll);
-        this.router.get('/search', this.authorController.search);
-        this.router.post('/', ValidationMiddleware.validateAuthorCreate, this.authorController.create);
-        this.router.get('/:id', this.authorController.getById);
-        this.router.put('/:id', ValidationMiddleware.validateAuthorUpdate, this.authorController.update);
-        this.router.delete('/:id', this.authorController.delete);
+        this.router.get(
+            '/search', 
+            ValidationMiddleware.validateSearchQuery,
+            ValidationMiddleware.validatePaginationQuery,
+            this.authorController.searchAuthors
+        );
+
+        this.router.get(
+            '/:id', 
+            ValidationMiddleware.validateIdParam,
+            this.authorController.getAuthorById
+        );
+
+        this.router.get(
+            '/authors',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateSearchQuery,
+            this.authorController.getAllAuthors
+        );
+        
+        this.router.post(
+            '/',
+            AuthMiddleware.authenticate,
+            this.authorController.createAuthor
+        );
+
+        this.router.put(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam, 
+            this.authorController.updateAuthor
+        );
+
+        this.router.delete(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.authorController.deleteAuthor
+        );
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

@@ -13,97 +13,66 @@ export class BookRouter {
     }
 
     private initializeRoutes(): void {
-        //rutas para users autenticados (sus propios libros)
+        // Obtener todos los libros (con paginación)
         this.router.get(
-            '/my-books',
-            AuthMiddleware.authenticate,
+            '/',
             ValidationMiddleware.validatePaginationQuery,
-            this.bookController.getMyBooks
-        );
-
-        this.router.post(
-            '/',
-            AuthMiddleware.authenticate,
-            ValidationMiddleware.validateBookCreation,
-            this.bookController.createBook
-        );
-
-        //rutas administrativas (requieren autenticación)
-        this.router.get(
-            '/',
-            AuthMiddleware.validatePaginationQuery,
             this.bookController.getAllBooks
         );
 
+        // Buscar libros 
         this.router.get(
-            '/status',
-            AuthMiddleware.authenticate,
-            this.bookController.getBookStats
-        );
-
-        this.router.get(
-            '/status/:status',
-            AuthMiddleware.authenticate,
-            ValidationMiddleware.validateStatusParam,
+            '/search',
+            ValidationMiddleware.validateSearchQuery,
             ValidationMiddleware.validatePaginationQuery,
-            this.bookController.getBookByStatus
+            this.bookController.searchBook
         );
 
+        // Buscar libro por ID
         this.router.get(
-            '/user/userId',
-            AuthMiddleware.authenticate,
+            '/:id',
             ValidationMiddleware.validateIdParam,
-            ValidationMiddleware.validatePaginationQuery,
-            this.bookController.getBookByUser
+            this.bookController.getBooksById
         );
 
+        //rutas para users autenticados (sus propios libros)
         this.router.get(
+            '/books',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validatePaginationQuery,
+            this.bookController.getAllBooks
+        );
+
+        // Crear libro (protegido)
+        this.router.post(
+            '/',
+            AuthMiddleware.authenticate,
+            this.bookController.createBook
+        );
+
+        // Actualizar libro
+        this.router.put(
             '/:id',
             AuthMiddleware.authenticate,
             ValidationMiddleware.validateIdParam,
-            this.bookController.getBookById
+            this.bookController.updateBook
         );
 
-        this.router.get(
-            '/:id/details',
+        // Eliminar libro
+        this.router.delete(
+            '/:id',
             AuthMiddleware.authenticate,
             ValidationMiddleware.validateIdParam,
-            this.bookController.getBookWithItems
+            this.bookController.deleteBook
         );
 
-        this.router.post(
-            '/user/:userId',
-            AuthMiddleware.authenticate,
-            ValidationMiddleware.validateUserIdParam,
-            ValidationMiddleware.validateBookCreation,
-            this.bookController.createBookForUser
-        );
-
-        this.router.patch(
-            '/:id/status',
-            AuthMiddleware.authenticate,
-            ValidationMiddleware.validateIdParam,
-            ValidationMiddleware.validateBookStatusUpdate,
-            this.bookController.updateBookStatus
-        );
-
-        this.router.get('/', this.bookController.getAll);
-        this.router.get('/search', this.bookController.search);
-        this.router.post('/', ValidationMiddleware.validateBookCreate, this.bookController.create);
-        this.router.get('/:id', this.bookController.getById);
-        this.router.put('/:id', ValidationMiddleware.validateBookUpdate, this.bookController.update);
-        this.router.delete('/:id', this.bookController.delete);
-
-        // relations
-        this.router.post('/:id/authors', this.bookController.addAuthors);
-        this.router.delete('/:id/authors/:authorId', this.bookController.removeAuthor);
-        this.router.post('/:id/genres', this.bookController.addGenres);
-        this.router.delete('/:id/genres/:genreId', this.bookController.removeGenre);
-        this.router.post('/:id/files', this.bookController.addFiles);
-        this.router.delete('/:id/files/:fileId', this.bookController.removeFile);
+        // Filtrar por autor, género, idioma
+        this.router.get('/author/:authorId', this.bookController.getBooksByAuthor);
+        this.router.get('/genre/:genreId', this.bookController.getBooksByGenre);
+        this.router.get('/language/:languageId', this.bookController.getBooksByLanguage);
     }
 
-    public getRouter(): void {
+    public getRouter(): Router {
         return this.router;
     }
 }

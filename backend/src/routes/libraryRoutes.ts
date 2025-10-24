@@ -20,7 +20,7 @@ export class LibraryRouter {
         this.router.delete('/:id', this.libraryController.delete);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }

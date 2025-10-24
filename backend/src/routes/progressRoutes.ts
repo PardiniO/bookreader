@@ -21,7 +21,7 @@ export class ProgressRouter {
         this.router.delete('/:id', this.progressController.delete);
     }
 
-    public geRouter(): Router {
+    public getRouter(): Router {
         return this.router;
     }
 }
