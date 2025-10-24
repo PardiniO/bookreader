@@ -33,13 +33,7 @@ export class AuthorRouter {
             this.authorController.getAuthorById
         );
 
-        this.router.get(
-            '/authors',
-            AuthMiddleware.authenticate,
-            ValidationMiddleware.validateSearchQuery,
-            this.authorController.getAllAuthors
-        );
-        
+        // Rutas protegidas (autenticación requerida)
         this.router.post(
             '/',
             AuthMiddleware.authenticate,
