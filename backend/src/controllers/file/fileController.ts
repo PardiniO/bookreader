@@ -50,6 +50,44 @@ export class FileController extends BaseController {
             this.sendSuccess(res, 'Archivo obtenido exitosamente', file);
         });
     };
+
+    public getFilesByUserId = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { userId } = req.params;
+            if (!this.isValidId(userId)) {
+                this.sendError(res, 'ID de usuario inválido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const files = await this.fileModel.getFileByUserId(parseInt(userId), pagination);
+            if (!files || (Array.isArray(files) && FileSystem.length === 0)) {
+                this.sendNotFound(res, 'No se encontraron archivos para este usuario');
+                return;
+            }
+
+            this.sendSuccess(res, 'Archivos obtenidos exitosamente', files);
+        });
+    };
+
+    public getFilesByBookId = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { bookId } = req.params;
+            if (!this.isValidId(bookId)) {
+                this.sendError(res, 'ID de libro inválido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const files = await this.fileModel.getFileByUserId(parseInt(bookId), pagination);
+            if (!files || (Array.isArray(files) && FileSystem.length === 0)) {
+                this.sendNotFound(res, 'No se encontraron archivos para este libro');
+                return;
+            }
+
+            this.sendSuccess(res, 'Archivos obtenidos exitosamente', files);
+        });
+    };
     
     public updateFile = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
@@ -85,7 +123,7 @@ export class FileController extends BaseController {
             this.sendSuccess(res, 'Archivo eliminado exitosamente');
         });
     };
-// Método aún no implementado (buscar archivo por nombre, tipo)
+
     public searchFile = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { q: searchTerm } = req.query;

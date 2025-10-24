@@ -54,6 +54,22 @@ export class FileModel extends BaseModel {
 
         return await this.findAll<IFile>(conditions, values);
     }
+
+    public async getFileByBookId(bookId: number, pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
+        const conditions = 'id_book = ?';
+        const values = [bookId.toString()];
+
+        if (pagination) {
+            const [files, total] = await Promise.all([
+                this.findAll<IFile>(conditions, values, pagination),
+                this.count(conditions, values)
+            ]);
+
+            return this.buildPaginatedResponse(files, pagination, total);
+        }
+
+        return await this.findAll<IFile>(conditions, values);
+    }
     
     public async updateFile(id: number, fileData: Partial<IFile>, requestingUserId?: number): Promise<boolean> {
         if (requestingUserId !== undefined) {
@@ -109,32 +125,6 @@ export class FileModel extends BaseModel {
 
 //Métodos todavía no implementados
 /**   
-    public async getFileByBookId(bookId: number, pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
-        const conditions = 'book_file.id_book = ?';
-        const values = [bookId.toString()];
-        const table = this.tableName;
-
-        if (pagination) {
-            let sql = `SELECT file.* FROM ${table} f
-                        JOIN book_file ON book_file.id_file = f.id
-                        WHERE ${conditions}
-                        LIMIT ? OFFSET ?`;
-            const files = await this.db.query<IFile>(sql, [bookId, pagination.limit, pagination.offset]);
-            const countSql = `SELECT COUNT(*) as total FROM ${table} f
-                        JOIN book_file ON book_file.id_file = f.id
-                        WHERE ${conditions}`;
-            const countRes = await this.db.queryOne<{ total: number }>(countSql, [bookId]);
-            const total = countRes?.total || 0;
-
-            return this.buildPaginatedResponse(files, pagination, total);
-        }
-
-        let sql = `SELECT file.* FROM ${table} f
-                    JOIN book_file ON book_file.id_file = f.id
-                    WHERE ${conditions}`;
-        return await this.db.query<IFile>(sql, values);
-    }
-    
     public async getFileForDownload(id: number, requestingUserId?: number): Promise<IFile | null> {
         const file = await this.findById<IFile>(id);
         if (!file) return null;
