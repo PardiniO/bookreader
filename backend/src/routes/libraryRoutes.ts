@@ -13,7 +13,11 @@ export class LibraryRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.get('/', this.libraryController.getByUser); // expects auth/userId
+        this.router.get(
+            '/',
+            this.libraryController.getByUser
+        ); // expects auth/userId
+        
         this.router.post('/', ValidationMiddleware.validateLibraryEntryCreate, this.libraryController.create);
         this.router.get('/:id', this.libraryController.getById);
         this.router.put('/:id', ValidationMiddleware.validateLibraryEntryUpdate, this.libraryController.update);

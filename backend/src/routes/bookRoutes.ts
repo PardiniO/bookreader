@@ -35,15 +35,26 @@ export class BookRouter {
             this.bookController.getBooksById
         );
 
-        //rutas para users autenticados (sus propios libros)
         this.router.get(
-            '/books',
-            AuthMiddleware.authenticate,
-            ValidationMiddleware.validatePaginationQuery,
-            this.bookController.getAllBooks
+            '/author/:authorId',
+            ValidationMiddleware.validateIdParam,
+            this.bookController.getBooksByAuthor
         );
 
-        // Crear libro (protegido)
+        this.router.get(
+            '/genre/:genreId',
+            ValidationMiddleware.validateIdParam,
+            this.bookController.getBooksByGenre
+        );
+
+        this.router.get(
+            '/language/:languageId',
+            ValidationMiddleware.validateIdParam,
+            this.bookController.getBooksByLanguage
+        );
+
+        // Rutas protegidas
+        // Crear libro
         this.router.post(
             '/',
             AuthMiddleware.authenticate,
@@ -65,11 +76,6 @@ export class BookRouter {
             ValidationMiddleware.validateIdParam,
             this.bookController.deleteBook
         );
-
-        // Filtrar por autor, género, idioma
-        this.router.get('/author/:authorId', this.bookController.getBooksByAuthor);
-        this.router.get('/genre/:genreId', this.bookController.getBooksByGenre);
-        this.router.get('/language/:languageId', this.bookController.getBooksByLanguage);
     }
 
     public getRouter(): Router {
