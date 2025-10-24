@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ReadingStatusController } from "../controllers/index";
-import { ValidationMiddleware } from "../middlewares";
+import { AuthMiddleware, ValidationMiddleware } from "../middlewares";
 
 export class ReadingStatusRouter {
     public router: Router;
@@ -13,11 +13,43 @@ export class ReadingStatusRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.get('/', this.readingStatusController.getAllStatuses);
-        this.router.post('/', ValidationMiddleware.validateStatusParam, this.readingStatusController.createStatus);
-        this.router.get('/:id', this.readingStatusController.getStatusById);
-        this.router.put('/:id', ValidationMiddleware.validateStatusParam, this.readingStatusController.updateStatus);
-        this.router.delete('/:id', this.readingStatusController.deleteStatus);
+        // Rutas públicas
+        // Obtener todos los estados de lectura
+        this.router.get(
+            '/',
+            ValidationMiddleware.validateSearchQuery,
+            this.readingStatusController.getAllStatuses
+        );
+
+        // Obtener por ID
+        this.router.get(
+            '/:id',
+            ValidationMiddleware.validateIdParam,
+            this.readingStatusController.getStatusById
+        );
+
+        // Rutas protegidas
+        // Crear nuevo estado de lectura
+        this.router.post(
+            '/',
+            AuthMiddleware.authenticate,
+            this.readingStatusController.createStatus
+        );
+
+        // Actualizar estado de lectura
+        this.router.put(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateStatusParam,
+            this.readingStatusController.updateStatus
+        );
+
+        this.router.delete(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.readingStatusController.deleteStatus
+        );
     }
 
     public getRouter(): Router {

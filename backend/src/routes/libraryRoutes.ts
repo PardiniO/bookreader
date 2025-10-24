@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { LibraryController } from "../controllers/library/libraryController";
-import { ValidationMiddleware } from "../middlewares";
+import { AuthMiddleware, ValidationMiddleware } from "../middlewares";
 
 export class LibraryRouter {
     public router: Router;
@@ -14,14 +14,37 @@ export class LibraryRouter {
 
     private initializeRoutes(): void {
         this.router.get(
-            '/',
-            this.libraryController.getByUser
-        ); // expects auth/userId
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.libraryController.getLibraryById
+        );
         
-        this.router.post('/', ValidationMiddleware.validateLibraryEntryCreate, this.libraryController.create);
-        this.router.get('/:id', this.libraryController.getById);
-        this.router.put('/:id', ValidationMiddleware.validateLibraryEntryUpdate, this.libraryController.update);
-        this.router.delete('/:id', this.libraryController.delete);
+        this.router.get(
+            '/user/:userId',
+            AuthMiddleware.authenticate,
+            this.libraryController.getLibraryByUserId
+        );
+        
+        this.router.post(
+            '/',
+            AuthMiddleware.authenticate,
+            this.libraryController.createLibrary
+        );
+
+        this.router.put(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.libraryController.updateLibrary
+        );
+
+        this.router.delete(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.libraryController.deleteLibrary
+        );
     }
 
     public getRouter(): Router {

@@ -1,24 +1,48 @@
 import { Router } from "express";
-import { ProgressController } from "../controllers/progressController";
-import { ValidationMiddleware } from "../middlewares";
+import { ReadingProgressController } from "../controllers/index";
+import { AuthMiddleware, ValidationMiddleware } from "../middlewares";
 
 export class ProgressRouter {
     public router: Router;
-    private progressController: ProgressController;
+    private progressController: ReadingProgressController;
 
     constructor() {
         this.router = Router();
-        this.progressController = new ProgressController();
+        this.progressController = new ReadingProgressController();
         this.initializeRoutes();
     }
 
     private initializeRoutes(): void {
-        this.router.post('/', ValidationMiddleware.validateProgressCreate, this.progressController.create);
-        this.router.get('/:id', this.progressController.getById);
-        this.router.get('/user/:userId', this.progressController.getByUser);
-        this.router.get('/user/:userId/file/:fileId', this.progressController.getByUserAndFile);
-        this.router.put('/:id', ValidationMiddleware.validateProgressUpdate, this.progressController.update);
-        this.router.delete('/:id', this.progressController.delete);
+        // Rutas protegidas
+        // Obtener por ID
+        this.router.get(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.progressController.getProgressById
+        );
+        
+        // Crear un nuevo progreso de lectura
+        this.router.post(
+            '/',
+            AuthMiddleware.authenticate,
+            this.progressController.createProgress
+        );
+        
+        // Actualizar progreso existente
+        this.router.put(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.progressController.updateProgress
+        );
+
+        this.router.delete(
+            '/:id', 
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.progressController.deleteProgress
+        );
     }
 
     public getRouter(): Router {
