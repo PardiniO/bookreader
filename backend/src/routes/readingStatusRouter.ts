@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ReadingStatusController } from "../controllers/readingStatusController";
+import { ReadingStatusController } from "../controllers/index";
 import { ValidationMiddleware } from "../middlewares";
 
 export class ReadingStatusRouter {
@@ -13,8 +13,8 @@ export class ReadingStatusRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.get('/', this.readingStatusController.getAll);
-        this.router.post('/', ValidationMiddleware.validateReadingStatusCreate, this.readingStatusController.create);
+        this.router.get('/', this.readingStatusController.getAllStatuses);
+        this.router.post('/', ValidationMiddleware.va, this.readingStatusController.create);
         this.router.get('/:id', this.readingStatusController.getById);
         this.router.put('/:id', ValidationMiddleware.validateReadingStatusUpdate, this.readingStatusController.update);
         this.router.delete('/:id', this.readingStatusController.delete);

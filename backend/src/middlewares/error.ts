@@ -3,7 +3,7 @@ import { IApiResponse } from '../interfaces/index';
 
 export class ErrorMiddleware {
     public static notFound = (req: Request, res: Response, next: NextFunction): void => {
-        const error = new Error(`Ruta no encontrada - ${req.originalUrl}`);
+        const error = new Error(`Ruta no encontrada: ${req.originalUrl}`);
         res.status(404);
         next(error);
     };
@@ -22,24 +22,20 @@ export class ErrorMiddleware {
             message = 'Recurso no encontrado';
             statusCode = 404;
         }
-
         // Error de validación
         if (error.name === 'ValidationError') {
             statusCode = 400;   
         }
-
         // Error de duplicado (MySQL)
         if (error.message.includes('ER_DUP_ENTRY')) {
             message = 'Recurso duplicado';
-            statusCode = 400;
+            statusCode = 409;
         }
-
         // Error de conexión a base de datos
             if (error.message.includes('ECONNREFUSED') || error.message.includes('ENOTFOUND')) {
             message = 'Error de conexión a la base de datos';
             statusCode = 500;
         }
-
         // Error de sintaxis SQL
         if (error.message.includes('ER_PARSE_ERROR')) {
             message = 'Error en consulta SQL';

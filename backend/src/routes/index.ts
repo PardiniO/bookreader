@@ -32,8 +32,16 @@ export class ApiRoutes {
         this.router = Router();
         this.userRoutes = new UserRouter();
         this.bookRoutes = new BookRouter();
-
-
+        this.authorRoutes = new AuthorRouter();
+        this.fileRoutes = new FileRouter();
+        this.genreRoutes = new GenreRouter();
+        this.highlighRoutes = new HighlightRouter();
+        this.languageRoutes = new LanguageRouter();
+        this.libraryRoutes = new LibraryRouter();
+        this.nationalityRoutes = new NationalityRouter();
+        this.noteRoutes = new NoteRouter();
+        this.progressRoutes = new ProgressRouter();
+        this.readingStatusRoutes = new ReadingStatusRouter();
         this.initializeRoutes();
     }
 
@@ -63,6 +71,16 @@ export class ApiRoutes {
                     description: 'API REST desarrollada con Node7, TypeScript, Express y MySQL',
                     endpoints: {
                         users: '/api/v1/users',
+                        books: '/api/v1/books',
+                        files: '/api/v1/files',
+                        authors: '/api/v1/authors',
+                        libraries: '/api/v1/libraries',
+                        progresses: '/api/v1/progress',
+                        statuses: '/api/v1/reading-status',
+                        notes: '/api/v1/notes',
+                        highlights: '/api/v1/highlights',
+                        genres: '/api/v1/genres',
+                        nationalities: '/api/v1/nationalities',
                         health: '/api/v1/health'
                     },
                     documentation: '',
@@ -72,10 +90,17 @@ export class ApiRoutes {
         });
 
         //registrar rutas de módulos
-        this.router.use('/users', this.userRouter.geRouter());
-        this.router.use('/books', this.bookRouter.getRouter() as unknown as Router);
-        
-
+        this.router.use('/users', this.userRoutes.geRouter());
+        this.router.use('/books', this.bookRoutes.getRouter() as unknown as Router);
+        this.router.use('/files', this.fileRoutes.geRouter());
+        this.router.use('/authors', this.authorRoutes.geRouter());
+        this.router.use('/libraries', this.libraryRoutes.geRouter());
+        this.router.use('/progress', this.progressRoutes.geRouter());
+        this.router.use('/reading-status', this.readingStatusRoutes.geRouter());
+        this.router.use('/notes', this.noteRoutes.geRouter());
+        this.router.use('/highlights', this.highlighRoutes.geRouter());
+        this.router.use('/genres', this.genreRoutes.geRouter());
+        this.router.use('/nationalities', this.nationalityRoutes.geRouter());
     }
 
     public getRouter(): Router {

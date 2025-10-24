@@ -61,7 +61,7 @@ export class App {
         // Headers personalizados
         this.app.use((req, res, next) => {
         res.setHeader('X-API-Version', '1.0.0');
-        res.setHeader('X-Powered-By', 'Node7-TypeScript-Backend');
+        res.setHeader('X-Powered-By', 'Bookreader-Backend');
         next();
         });
     }
@@ -73,10 +73,10 @@ export class App {
             success: true,
             message: 'Bienvenido a Node7 TypeScript Backend API',
             data: {
-            name: 'Node7 TypeScript Backend',
+            name: 'bookreader-backend',
             version: '1.0.0',
             description: 'API REST desarrollada con Node.js, TypeScript, Express y MySQL',
-            author: 'UTN Tecnicatura',
+            author: 'Oriana Pardini',
             apiUrl: '/api/v1',
             healthCheck: '/api/v1/health',
             timestamp: new Date().toISOString(),
