@@ -11,14 +11,14 @@ export class NationalityController extends BaseController {
         this.nationalityModel = new NationalityModel();
     }
 
-    public getAll = async (req: Request, res: Response): Promise<void> => {
+    public getAllNationalities = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const nationalities = await this.nationalityModel.getAllNationalities();
             this.sendSuccess(res, 'Nacionalidades obtenidas exitosamente', nationalities);
         });
     };
 
-    public getById = async (req: Request, res: Response): Promise<void> => {
+    public getNationalityById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -34,7 +34,7 @@ export class NationalityController extends BaseController {
         });
     };
 
-    public create = async (req: Request, res: Response): Promise<void> => {
+    public createNationality = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             if (!this.validateRequest(req, res)) return;
             const nationalityData: Omit<INationality, 'id'> = req.body;
@@ -43,7 +43,7 @@ export class NationalityController extends BaseController {
         });
     };
 
-    public update = async (req: Request, res: Response): Promise<void> => {
+    public updateNationality = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -60,7 +60,7 @@ export class NationalityController extends BaseController {
         });
     };
 
-    public delete = async (req: Request, res: Response): Promise<void> => {
+    public deleteNationality = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -73,6 +73,21 @@ export class NationalityController extends BaseController {
                 return;
             }
             this.sendSuccess(res, 'Nacionalidad eliminada exitosamente');
+        });
+    };
+
+    public searchNationalities = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { query: searchTerm } = req.query;
+            if (!searchTerm || typeof searchTerm !== 'string') {
+                this.sendError(res, 'Término de búsqueda requerido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const books = await this.nationalityModel.searchNationalitys(searchTerm, pagination);
+            
+            this.sendSuccess(res, 'Búsqueda de nacionalidad completada', books);
         });
     };
 }

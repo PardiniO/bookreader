@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { GenreModel } from '../../models/book/genreModel';
 import { BaseController } from '../baseController';
-import { IGenre } from '../../interfaces';
+import { IGenre, IPaginatedResponse, IPaginationParams } from '../../interfaces';
 
 export class GenreController extends BaseController {
     private genreModel: GenreModel;
@@ -11,7 +11,7 @@ export class GenreController extends BaseController {
         this.genreModel = new GenreModel();
     }
 
-    public getAll = async (req: Request, res: Response): Promise<void> => {
+    public getAllGenres = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const pagination = this.getPaginationParams(req);
             const genres = await this.genreModel.getAllGenres(pagination);
@@ -19,7 +19,7 @@ export class GenreController extends BaseController {
         });
     };
 
-    public getById = async (req: Request, res: Response): Promise<void> => {
+    public getGenreById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -35,7 +35,7 @@ export class GenreController extends BaseController {
         });
     };
 
-    public create = async (req: Request, res: Response): Promise<void> => {
+    public createGenre = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             if (!this.validateRequest(req, res)) return;
             const genreData: Omit<IGenre, 'id'> = req.body;
@@ -44,7 +44,7 @@ export class GenreController extends BaseController {
         });
     };
 
-    public update = async (req: Request, res: Response): Promise<void> => {
+    public updateGenre = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -61,7 +61,7 @@ export class GenreController extends BaseController {
         });
     };
 
-    public delete = async (req: Request, res: Response): Promise<void> => {
+    public deleteGenre = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
             const { id } = req.params;
             if (!this.isValidId(id)) {
@@ -74,6 +74,21 @@ export class GenreController extends BaseController {
                 return;
             }
             this.sendSuccess(res, 'Género eliminado exitosamente');
+        });
+    };
+
+    public searchGenres = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { query: searchTerm } = req.query;
+            if (!searchTerm || typeof searchTerm !== 'string') {
+                this.sendError(res, 'Término de búsqueda requerido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const books = await this.genreModel.searchGenres(searchTerm, pagination);
+            
+            this.sendSuccess(res, 'Búsqueda de géneros completada', books);
         });
     };
 }

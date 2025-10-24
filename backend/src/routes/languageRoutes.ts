@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { LanguageController } from "../controllers/book/languageController";
-import { ValidationMiddleware } from "../middlewares";
+import { AuthMiddleware, ValidationMiddleware } from "../middlewares";
 
 export class LanguagetRouter {
     public router: Router;
@@ -13,11 +13,50 @@ export class LanguagetRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.get('/', this.languageController.getAll);
-        this.router.post('/', ValidationMiddleware.validateLanguageCreate, this.languageController.create);
-        this.router.get('/:id', this.languageController.getById);
-        this.router.put('/:id', ValidationMiddleware.validateLanguageUpdate, this.languageController.update);
-        this.router.delete('/:id', this.languageController.delete);
+        // Rutas Públicas
+        // Obtener todos los idiomas
+        this.router.get(
+            '/',
+            ValidationMiddleware.validatePaginationQuery,
+            this.languageController.getAllLanguages
+        );
+
+        // Obtener por ID
+        this.router.get(
+            '/:id',
+            this.languageController.getLanguageById
+        );
+
+        // Buscar idiomas
+        this.router.get(
+            '/search',
+            ValidationMiddleware.validateSearchQuery,
+            ValidationMiddleware.validatePaginationQuery,
+            this.languageController.searchLanguages
+        );
+
+        // Rutas protegidas
+        // Crear idioma
+        this.router.post(
+            '/',
+            AuthMiddleware.authenticate,
+            this.languageController.createLanguage
+        );
+
+        // Actualizar idioma
+        this.router.put(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.languageController.updateLanguage
+        );
+
+        this.router.delete(
+            '/:id', 
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.languageController.deleteLanguage
+        );
     }
 
     public getRouter(): Router {

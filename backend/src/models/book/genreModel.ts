@@ -8,7 +8,7 @@ export class GenreModel extends BaseModel {
 
     public async createGenre(genreData: Omit<IGenre, 'id'>): Promise<number> {
         return await this.create<IGenre>(genreData);
-    }
+    };
 
     public async getAllGenres(pagination?: IPaginationParams): Promise<IGenre[] | IPaginatedResponse<IGenre> | undefined> {
         if (pagination) {
@@ -21,21 +21,21 @@ export class GenreModel extends BaseModel {
         }
 
         return await this.findAll<IGenre>();
-    }
+    };
 
     public async getGenreById(id: number): Promise<IGenre | null> {
         return await this.findById<IGenre>(id);
-    }
+    };
 
     public async updateGenre(id: number, genreData: Partial<IGenre>): Promise<boolean> {
         const affectedRows = await this.updateById<IGenre>(id, genreData);
         return affectedRows > 0;
-    }
+    };
 
     public async deleteGenre(id: number): Promise<boolean> {
         const affectedRows = await this.deleteById(id);
         return affectedRows > 0;
-    }
+    };
 
     public async searchGenres(searchTerm: string, pagination?: IPaginationParams): Promise<IGenre[] | IPaginatedResponse<IGenre>> {
         const conditions = (`name LIKE ?`);
@@ -51,5 +51,5 @@ export class GenreModel extends BaseModel {
         }
 
         return await this.findAll<IGenre>(conditions, values);
-    }
+    };
 }

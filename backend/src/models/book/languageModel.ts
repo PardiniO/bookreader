@@ -36,4 +36,20 @@ export class LanguageModel extends BaseModel {
         const affectedRows = await this.deleteById(id);
         return affectedRows > 0;
     }
+
+    public async searchLnaguage(searchTerm: string, pagination?: IPaginationParams): Promise<ILanguage[] | IPaginatedResponse<ILanguage>> {
+        const conditions = (`name LIKE ?`);
+        const values = [`%${searchTerm}%`];
+
+        if (pagination) {
+            const [languages, total] = await Promise.all([
+                this.findAll<ILanguage>(conditions, values, pagination),
+                this.count(conditions, values)
+            ]);
+
+            return this.buildPaginatedResponse(languages, pagination, total);
+        }
+
+        return await this.findAll<ILanguage>(conditions, values);
+    }
 }

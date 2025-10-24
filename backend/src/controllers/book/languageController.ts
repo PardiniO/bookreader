@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { LanguageModel } from '../../models/book/languageModel';
 import { BaseController } from '../baseController';
-import { ILanguage } from '../../interfaces';
+import { ILanguage, IPaginatedResponse, IPaginationParams } from '../../interfaces';
 
 export class LanguageController extends BaseController {
     private languageModel: LanguageModel;
@@ -73,6 +73,21 @@ export class LanguageController extends BaseController {
                 return;
             }
             this.sendSuccess(res, 'Idioma eliminado exitosamente');
+        });
+    };
+    
+    public searchLanguages = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { query: searchTerm } = req.query;
+            if (!searchTerm || typeof searchTerm !== 'string') {
+                this.sendError(res, 'Término de búsqueda requerido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const languages = await this.languageModel.searchLnaguage(searchTerm, pagination);
+            
+            this.sendSuccess(res, 'Búsqueda de idiomas completada', languages);
         });
     };
 }

@@ -13,11 +13,48 @@ export class GenreRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.get('/', this.genreController.getAll);
-        this.router.post('/', ValidationMiddleware.validateGenreCreate, this.genreController.create);
-        this.router.get('/:id', this.genreController.getById);
-        this.router.put('/:id', ValidationMiddleware.validateGenreUpdate, this.genreController.update);
-        this.router.delete('/:id', this.genreController.delete);
+        // Rutas públicas
+        // Obtener todos los géneros
+        this.router.get(
+            '/',
+            ValidationMiddleware.validateSearchQuery,
+            this.genreController.getAllGenres
+        );
+
+        // Obtener por ID
+        this.router.get(
+            '/:id',
+            ValidationMiddleware.validatePaginationQuery,
+            this.genreController.createGenre
+        );
+
+        this.router.get(
+            '/search',
+            ValidationMiddleware.validateSearchQuery,
+            ValidationMiddleware.validatePaginationQuery,
+            this.genreController.searchGenres
+        );
+
+        // Rutas protegidas
+        // Crear género
+        this.router.put(
+            '/',
+            AuthMiddleware.authenticate,
+            this.genreController.createGenre
+        );
+
+        // Actualizar género
+        this.router.put(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.genreController.createGenre
+        );
+
+        this.router.delete(
+            '/:id',
+            this.genreController.deleteGenre
+        );
     }
 
     public getRouter(): Router {
