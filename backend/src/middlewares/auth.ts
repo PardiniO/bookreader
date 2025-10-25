@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { IAuthenticatedRequest } from "../interfaces/index";
-import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { IJwtPayload } from "@/interfaces/common/jwtPayloadInterface";
 
 export class AuthMiddleware {
@@ -60,7 +60,7 @@ export class AuthMiddleware {
         }
     };
 
-    public static optional = (req: IAuthenticatedRequest, res: Response, next: NextFunction): void => {
+    public static optional = (req: IAuthenticatedRequest, _res: Response, next: NextFunction): void => {
         try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {

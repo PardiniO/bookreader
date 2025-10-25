@@ -47,7 +47,7 @@ export class ApiRoutes {
 
     private initializeRoutes(): void {
         //ruta de salud/estado de la API
-        this.router.get('/health', (req, res) => {
+        this.router.get('/health', (_req, res) => {
             res.status(200).json({
                 sucess: true,
                 message: 'API funcionando correctamente',
@@ -61,7 +61,7 @@ export class ApiRoutes {
         });
 
         //información de la API
-        this.router.get('/', (req, res) => {
+        this.router.get('/', (_req, res) => {
             res.status(200).json({
                 success: true,
                 message: 'Bienvenido a la API Node7 TypeScript Backend',

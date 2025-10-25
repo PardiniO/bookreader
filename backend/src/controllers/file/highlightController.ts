@@ -58,7 +58,6 @@ export class HighlighController extends BaseController {
         await this.handleAsyncRoute(req, res, async (req, res) => {
         if (!this.validateRequest(req, res)) return;
 
-        const userId = this.extractUserIdFromToken(req);
         const { idProgress, highlightedText, page, color } = req.body;
 
         const newHighlightData: Omit<IHighlight, 'id'> = {

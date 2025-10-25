@@ -1,5 +1,5 @@
 import { Database } from '../config/db';
-import { IPaginationParams, IPaginatedResponse, IApiResponse } from '../interfaces/index';
+import { IPaginationParams, IPaginatedResponse } from '../interfaces/index';
 
 export abstract class BaseModel {
     protected db: Database;

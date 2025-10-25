@@ -137,14 +137,7 @@ export class UserController extends BaseController {
         this.sendSuccess(res, 'Búsqueda completada', users);
         });
     };
-
-    public getUserStats = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
-        const stats = await this.userModel.getUserStats();
-        this.sendSuccess(res, 'Estadísticas obtenidas exitosamente', stats);
-        });
-    };
-
+    
     // Métodos de autenticación
     public login = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {

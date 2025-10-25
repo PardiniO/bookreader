@@ -59,7 +59,7 @@ export class App {
         this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
         // Headers personalizados
-        this.app.use((req, res, next) => {
+        this.app.use((_req, res, next) => {
         res.setHeader('X-API-Version', '1.0.0');
         res.setHeader('X-Powered-By', 'Bookreader-Backend');
         next();
@@ -68,7 +68,7 @@ export class App {
 
     private initializeRoutes(): void {
         // Ruta raíz
-        this.app.get('/', (req, res) => {
+        this.app.get('/', (_req, res) => {
         res.status(200).json({
             success: true,
             message: 'Bienvenido a Node7 TypeScript Backend API',

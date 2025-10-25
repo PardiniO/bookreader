@@ -10,9 +10,9 @@ export class ErrorMiddleware {
 
     public static errorHandler = (
         error: Error,
-        req: Request,
+        _req: Request,
         res: Response,
-        next: NextFunction
+        _next: NextFunction
     ): void => {
         let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
         let message = error.message;

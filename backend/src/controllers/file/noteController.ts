@@ -37,21 +37,20 @@ export class NoteController extends BaseController {
 
     public createNote = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
-        if (!this.validateRequest(req, res)) return;
+            if (!this.validateRequest(req, res)) return;
 
-        const userId = this.extractUserIdFromToken(req);
-        const { idProgress, text, page } = req.body;
+            const { idProgress, text, page } = req.body;
 
-        const newNoteData: Omit<INote, 'id'> = {
-            idProgress,
-            text,
-            page: page || undefined,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        };
+            const newNoteData: Omit<INote, 'id'> = {
+                idProgress,
+                text,
+                page: page || undefined,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
 
-        const createdNote = await this.noteModel.createNote(newNoteData);
-        this.sendSuccess(res, 'Nota creada exitosamente', createdNote, 201);
+            const createdNote = await this.noteModel.createNote(newNoteData);
+            this.sendSuccess(res, 'Nota creada exitosamente', createdNote, 201);
         });
     };
 

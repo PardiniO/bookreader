@@ -4,8 +4,11 @@
   "description": "Backend en Node.js con TypeScript, Express, MySQL y Docker",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register nodemon --watch src src/server.ts",
+    "dev:watch": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
     "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/server.js",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",

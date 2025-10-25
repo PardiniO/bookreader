@@ -12,7 +12,7 @@ export class NationalityController extends BaseController {
     }
 
     public getAllNationalities = async (req: Request, res: Response): Promise<void> => {
-        await this.handleAsyncRoute(req, res, async (req, res) => {
+        await this.handleAsyncRoute(req, res, async (_req, res) => {
             const nationalities = await this.nationalityModel.getAllNationalities();
             this.sendSuccess(res, 'Nacionalidades obtenidas exitosamente', nationalities);
         });

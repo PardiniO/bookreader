@@ -57,12 +57,6 @@ export class UserRouter {
         );
 
         this.router.get(
-            '/stats',
-            AuthMiddleware.authenticate,
-            this.userController.getUserStats
-        );
-
-        this.router.get(
             '/:id',
             AuthMiddleware.authenticate,
             ValidationMiddleware.validateIdParam,
