@@ -9,15 +9,15 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: bookreader_db
+      MYSQL_DATABASE: bookverse
       MYSQL_USER: bookreader_user
-      MYSQL_PASSWORD: bookreader_password
+      MYSQL_PASSWORD: 1234pass
       MYSQL_CHARSET: utf8mb4
       MYSQL_COLLATION: utf8mb4_unicode_ci
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docker/mysql/init.sql:/docker-entrypoint-init
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     networks:
       - node7-network
     healthcheck:
