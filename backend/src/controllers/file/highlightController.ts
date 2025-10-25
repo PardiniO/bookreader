@@ -17,6 +17,7 @@ export class HighlighController extends BaseController {
             this.sendSuccess(res, 'Resaltados obtenidos exitosamente', highlights);
         });
     };
+
     public getHighlightById = async (req: Request, res: Response): Promise<void> => {
         await this.handleAsyncRoute(req, res, async (req, res) => {
         if (!this.isValidId(req.params.id)) {
@@ -31,6 +32,25 @@ export class HighlighController extends BaseController {
         }
 
         this.sendSuccess(res, 'Resaltado obtenida exitosamente', highlight);
+        });
+    };
+
+    public getLibraryByProgressId = async (req: Request, res: Response): Promise<void> => {
+        await this.handleAsyncRoute(req, res, async (req, res) => {
+            const { progressId } = req.params;
+            if (!this.isValidId(progressId)) {
+                this.sendError(res, 'ID del progreso de lectura inválido');
+                return;
+            }
+
+            const pagination = this.getPaginationParams(req);
+            const highlights = await this.highlightModel.getHighlightByProgressId(parseInt(progressId), pagination);
+            if (!highlights) {
+                this.sendNotFound(res, 'Resaltados no encontrados');
+                return;
+            }
+
+            this.sendSuccess(res, 'Resaltados por progreso de lectura obtenidos exitosamente', highlights);
         });
     };
 

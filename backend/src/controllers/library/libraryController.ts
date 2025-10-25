@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { LibraryModel } from "@/models";
 import { BaseController } from "../baseController";
 import { ILibrary } from "@/interfaces";
-import { query } from "express-validator";
 
 export class LibraryController extends BaseController {
     private libraryModel: LibraryModel;

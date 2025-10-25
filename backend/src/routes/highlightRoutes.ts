@@ -1,24 +1,62 @@
 import { Router } from "express";
-import { HighlightController } from "../controllers/file/highlightController";
-import { ValidationMiddleware } from "../middlewares";
+import { HighlighController } from "../controllers/index";
+import { AuthMiddleware, ValidationMiddleware } from "../middlewares";
 
 export class HighlightRouter {
     public router: Router;
-    private highlightController: HighlightController;
+    private highlightController: HighlighController;
 
     constructor() {
         this.router = Router();
-        this.highlightController = new HighlightController();
+        this.highlightController = new HighlighController();
         this.initializeRoutes();
     }
 
     private initializeRoutes(): void {
-        this.router.post('/', ValidationMiddleware.validateHighlightCreate, this.highlightController.create);
-        this.router.get('/:id', this.highlightController.getById);
-        this.router.put('/:id', ValidationMiddleware.validateHighlightUpdate, this.highlightController.update);
-        this.router.delete('/:id', this.highlightController.delete);
-        this.router.get('/progress/:progressId', this.highlightController.getByProgress);
-        this.router.get('/search', this.highlightController.search);
+        // Rutas públicas
+        // Obtener todos los resaltados
+        this.router.post(
+            '/',
+            ValidationMiddleware.validatePaginationQuery,
+            this.highlightController.getAllHighlights
+        );
+
+        // Obtener po ID
+        this.router.get(
+            '/:id',
+            ValidationMiddleware.validateIdParam,
+            this.highlightController.getHighlightById
+        );
+
+        // Rutas protegidas
+        // Crear resaltados
+        this.router.post(
+            '/:id',
+            ValidationMiddleware.validateIdParam,
+            this.highlightController.createHighlight
+        );
+
+        // Obtener por progreso de lectura del usuario
+        this.router.get(
+            '/user/:userId',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.highlightController.getLibraryByProgressId
+        );
+
+        this.router.put(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.highlightController.updateHighlight
+        );
+        
+        this.router.delete(
+            '/:id',
+            AuthMiddleware.authenticate,
+            ValidationMiddleware.validateIdParam,
+            this.highlightController.deleteHighlight
+        );
     }
 
     public getRouter(): Router {

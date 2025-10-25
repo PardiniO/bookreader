@@ -13,6 +13,8 @@ export class LibraryRouter {
     }
 
     private initializeRoutes(): void {
+        // Rutas públicas
+        // Obtener por ID
         this.router.get(
             '/:id',
             AuthMiddleware.authenticate,
@@ -20,6 +22,7 @@ export class LibraryRouter {
             this.libraryController.getLibraryById
         );
         
+        // Obtener por usuario
         this.router.get(
             '/user/:userId',
             AuthMiddleware.authenticate,
