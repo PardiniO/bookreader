@@ -1,0 +1,162 @@
+import { BaseModel } from "../baseModel";
+import { IFile, IPaginationParams, IPaginatedResponse } from "../../interfaces/index";
+
+export class FileModel extends BaseModel {
+    constructor() {
+        super('files');
+    }
+
+    private readonly ALLOWED_MIME_TYPES = ['application/pdf', 'application/epub+zip'];
+
+    public async createFile(fileData: Omit<IFile, 'id'>): Promise<number> {
+        if (!this.ALLOWED_MIME_TYPES.includes(fileData.mimetype)) {
+            throw new Error(`Tipo de archivo no permitido: ${fileData.mimetype}`);
+        }
+
+        const insertData: Partial<IFile> = {
+            idUser: fileData.idUser,
+            filename: fileData.filename,
+            mimetype: fileData.mimetype,
+            path: fileData.path,
+            size: fileData.size,
+            uploadDate: fileData.uploadDate ?? new Date()
+        };
+        return await this.create(insertData);
+    }
+
+    public async getAllFiles(pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
+        if (pagination) {
+            const [files, total] = await Promise.all([
+                this.findAll<IFile>('1=1', [], pagination),
+                this.count()
+            ]);
+            return this.buildPaginatedResponse(files, pagination, total);
+        }
+        return await this.findAll<IFile>();
+    }
+
+    public async getFileById(id: number): Promise<IFile | null> {
+        return await this.findById(id);
+    }
+
+    public async getFileByUserId(userId: number,pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
+        const conditions = 'id_user = ?';
+        const values = [userId.toString()];
+
+        if (pagination) {
+            const [files, total] = await Promise.all([
+                this.findAll<IFile>(conditions, values, pagination),
+                this.count(conditions, values)
+            ]);
+
+            return this.buildPaginatedResponse(files, pagination, total);
+        }
+
+        return await this.findAll<IFile>(conditions, values);
+    }
+
+    public async getFileByBookId(bookId: number, pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
+        const conditions = 'id_book = ?';
+        const values = [bookId.toString()];
+
+        if (pagination) {
+            const [files, total] = await Promise.all([
+                this.findAll<IFile>(conditions, values, pagination),
+                this.count(conditions, values)
+            ]);
+
+            return this.buildPaginatedResponse(files, pagination, total);
+        }
+
+        return await this.findAll<IFile>(conditions, values);
+    }
+    
+    public async updateFile(id: number, fileData: Partial<IFile>, requestingUserId?: number): Promise<boolean> {
+        if (requestingUserId !== undefined) {
+            const ok = await this.validateOwnership(id, requestingUserId);
+            if (!ok) throw new Error("No tiene autorización para actualizar este archivo");
+        }
+        
+        if (fileData.mimetype && !this.ALLOWED_MIME_TYPES.includes(fileData.mimetype)) {
+            throw new Error(`Tipo MIME inválido: ${fileData.mimetype}`);
+        }
+        
+        const updateData: Partial<IFile> = {};
+        if (fileData.filename !== undefined) updateData.filename = fileData.filename;
+        if (fileData.mimetype !== undefined) updateData.mimetype = fileData.mimetype;
+        if (fileData.path !== undefined) updateData.path = fileData.path;
+        if (fileData.size !== undefined) updateData.size = fileData.size;
+        
+        const affectedRows = await this.updateById<IFile>(id, fileData);
+        return affectedRows > 0;
+    }
+    
+    public async deleteFile(id: number, requestingUserId?: number): Promise<boolean> {
+        if (requestingUserId !== undefined) {
+            const ok = await this.validateOwnership(id, requestingUserId);
+            if (!ok) throw new Error("No tiene autorización para eliminar este archivo");
+        }
+        const affectedRows = await this.deleteById(id);
+        return affectedRows > 0;
+    }
+
+    public async searchFiles(searchTerm: string, pagination?: IPaginationParams): Promise<IFile[] | IPaginatedResponse<IFile>> {
+        const conditions = '(filename LIKE ? OR mimetype LIKE ? OR path LIKE ?)';
+        const like = `%${searchTerm}%`;
+        const values = [like, like, like];
+
+        if (pagination) {
+            const [files, total] = await Promise.all([
+                this.findAll<IFile>(conditions, values, pagination),
+                this.count(conditions, values)
+            ]);
+
+            return this.buildPaginatedResponse(files, pagination, total);
+        }
+
+        return await this.findAll<IFile>(conditions, values);
+    }
+    
+    public async validateOwnership(fileId: number, userId: number): Promise<boolean> {
+        const file = await this.findById<IFile>(fileId);
+        if (!file) return false;
+        return file.idUser === userId;
+    }
+
+//Métodos todavía no implementados
+/**   
+    public async getFileForDownload(id: number, requestingUserId?: number): Promise<IFile | null> {
+        const file = await this.findById<IFile>(id);
+        if (!file) return null;
+        if (requestingUserId !== undefined && file.idUser !== requestingUserId) {
+            throw new Error("No tiene autorización para descargar este archivo");
+        }
+        return file;
+    }
+
+    public async linkFileToBook(fileId: number, bookId: number): Promise<boolean> {
+        let existSql = `SELECT COUNT(*) as total FROM book_file
+                    WHERE id_file = ? AND id_book = ?`;
+        let existsRes = await this.db.queryOne<{ total: number }>(existSql, [fileId, bookId]);
+        if (existsRes && existsRes.total > 0) return true;
+
+        const insertedId = await this.db.insert('book_file', { id_book: bookId, id_file: fileId });
+        return insertedId > 0;
+    }
+
+    public async unlinkFileFromBook(fileId: number, bookId: number): Promise<boolean> {
+        const affectedRows = await this.db.delete('book_file', 'id_file = ? AND id_book = ?', [fileId, bookId]);
+        return affectedRows > 0;
+    }
+
+    public async getFileStatus(id: number): Promise<{ exists: boolean; linkedCount: number }> {
+        const file = await this.findById<IFile>(id);
+        if (!file) return { exists: false, linkedCount: 0 };
+
+        let countSql = `SELECT COUNT(*) as total FROM book_file WHERE id_file = ?`;
+        let countRes = await this.db.queryOne<{ total: number }>(countSql, [id]);
+        const linkedCount = countRes?.total || 0;
+        return { exists: true, linkedCount };
+    }
+*/
+}
