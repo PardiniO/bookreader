@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "epubjs": "^0.3.93",
-    "ngx-extended-pdf-viewer": "^25.6.0-alpha.3"
-  }
-}
